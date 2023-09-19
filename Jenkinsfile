@@ -16,12 +16,6 @@ pipeline {
         }
 
 
-        stage('Gradle build') {
-            steps {
-                sh './gradlew build'
-            }
-        }
-
         stage('Upload Artifact to JFrog') {
             steps {
                 script {
