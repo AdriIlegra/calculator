@@ -14,13 +14,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Gradle clean') {
-            steps {
-                sh './gradlew clean'
-            }
-        }
-
         stage('Gradle test') {
             steps {
                 sh './gradlew test'
@@ -51,10 +44,4 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            junit 'build/test-results/test/*.xml'
-        }
-    }
-
-}
+  }
