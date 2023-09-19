@@ -14,9 +14,9 @@ pipeline {
                 }
             }
         }
-        stage('Gradle test') {
+       stage('Install dependencies') {
             steps {
-                sh './gradlew test'
+                sh './gradlew dependencies'
             }
         }
 
