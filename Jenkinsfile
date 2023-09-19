@@ -14,11 +14,7 @@ pipeline {
                 }
             }
         }
-       stage('Install dependencies') {
-            steps {
-                sh './gradlew dependencies'
-            }
-        }
+
 
         stage('Gradle build') {
             steps {
