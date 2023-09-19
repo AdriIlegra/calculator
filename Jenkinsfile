@@ -40,7 +40,7 @@ pipeline {
                     def uploadSpec = """{
                         "files": [
                             {
-                                "pattern": "build/libs/tema-04.0.0.1-SNAPSHOT.jar",
+                                "pattern": "build/libs/*.jar",
                                 "target": "Calculadora/"
                             }
                         ]
