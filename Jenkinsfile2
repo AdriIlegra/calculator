@@ -1,0 +1,28 @@
+pipeline {
+
+    agent any
+
+    environment {
+          CI = 'true'
+          ARTIFACTORY_SERVER_ID = 'Calculadora' // Nome do servidor de Artifactory configurado no Jenkins
+      }
+
+    stages {
+
+        stage('Download Artifact from JFrog') {
+            steps {
+                rtDownload (
+                    serverId: "Calculator Artifactory",
+                    spec: """{
+                        "files": [
+                            {  "pattern": "build/libs/*.jar",
+                                                             "target": "Calculadora/"
+                            }
+                        ]
+                    }"""
+                )
+            }
+        }
+
+    }
+}
