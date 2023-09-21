@@ -15,9 +15,8 @@ pipeline {
                     serverId: "Calculator Artifactory",
                     spec: """{
                         "files": [
-                            {  "pattern": "build/libs/*.jar",
-                                                             "target": "Calculadora/"
-                            }
+                             "pattern": "calculadora/calculadora.war",
+                             "target": "job-01/build/libs/calculadora.war"
                         ]
                     }"""
                 )
