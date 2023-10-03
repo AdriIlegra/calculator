@@ -3,8 +3,8 @@ pipeline {
     stages {
         stage('Checkout from Git') {
             steps {
-                git branch: 'master', url: https://github.com/AdriIlegra/calculator.git'
-            }
+   git 'https://github.com/AdriIlegra/calculator.git'
+       }
         }
         stage('Upload Artifact to JFrog') {
             steps {
