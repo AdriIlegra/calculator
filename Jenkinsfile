@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         CI = 'true'
-        ARTIFACTORY_SERVER_ID = 'Calculadora' // Nome do servidor de Artifactory configurado no Jenkins
+        ARTIFACTORY_SERVER_ID = 'calculadora' // Nome do servidor de Artifactory configurado no Jenkins
     }
 
     stages {
@@ -19,11 +19,11 @@ pipeline {
         stage('Upload Artifact to JFrog') {
             steps {
                 script {
-                    def server = Artifactory.server ARTIFACTORY_SERVER_ID
+                    def server =ARTIFACTORY_SERVER_ID
                     def uploadSpec = """{
                         "files": [
                             {
-                                "pattern": "target/*.jar",
+                                "pattern": "target/*.jar",  // Arquivo que será enviado para o Artifactory
                                 "target": "libs-release-local/"
                             }
                         ]
