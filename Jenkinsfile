@@ -23,8 +23,8 @@ pipeline {
                     def uploadSpec = """{
                         "files": [
                             {
-                                "pattern": "build/libs/*.jar",
-                                "target": "Calculadora/"
+                                "pattern": "target/*.jar",
+                                "target": "libs-release-local/"
                             }
                         ]
                     }"""
