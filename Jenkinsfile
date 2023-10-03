@@ -8,12 +8,7 @@ pipeline {
                     def gitTool = tool name: 'GitToolName', type: 'hudson.plugins.git.GitTool'
                     withEnv(["GIT_HOME=${gitTool}"]) {
                         // Use the configured Git tool
-                        sh """
-                            git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/teste 1/.git
-                            git config remote.origin.url https://github.com/AdriIlegra/calculator.git
-                            git fetch --tags --force --progress -- https://github.com/AdriIlegra/calculator.git +refs/heads/*:refs/remotes/origin/*
-                            git rev-parse refs/remotes/origin/master^{commit}
-                        """
+
                     }
                 }
             }
