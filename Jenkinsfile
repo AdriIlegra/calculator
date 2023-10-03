@@ -1,37 +1,26 @@
 pipeline {
     agent any
-
-    environment {
-        CI = 'true'
-        ARTIFACTORY_SERVER_ID = 'calculadora' // Nome do servidor de Artifactory configurado no Jenkins
-    }
-
     stages {
-        stage('Connect to Git Repository') {
+        stage('Checkout from Git') {
             steps {
-                script {
-                    checkout scm
-                }
+                git branch: 'master', url: https://github.com/AdriIlegra/calculator.git'
             }
         }
-
-
         stage('Upload Artifact to JFrog') {
             steps {
                 script {
-                    def server =ARTIFACTORY_SERVER_ID
+                    def server = Artifactory.server 'ARTIFACTORY_SERVER_ID' // Use the server name you configured
                     def uploadSpec = """{
                         "files": [
                             {
-                                "pattern": "target/*.jar",  // Arquivo que será enviado para o Artifactory
+                                "pattern": "target/*.jar",  // File to be uploaded to Artifactory
                                 "target": "libs-release-local/"
                             }
                         ]
                     }"""
-                    server.upload(uploadSpec)
+                    server.upload spec: uploadSpec
                 }
             }
         }
     }
-
-  }
+}
