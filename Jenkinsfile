@@ -17,7 +17,7 @@ pipeline {
         stage('Upload Artifact to JFrog') {
             steps {
                 script {
-                    def server = Artifactory.server 'ARTIFACTORY_SERVER_ID' // Use the server name you configured
+                    def server = Artifactory.server 'calculadora' // Use the server name you configured
                     def uploadSpec = """{
                         "files": [
                             {
