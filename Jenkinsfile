@@ -8,12 +8,18 @@ pipeline {
                     def gitTool = tool name: 'GitToolName', type: 'hudson.plugins.git.GitTool'
                     withEnv(["GIT_HOME=${gitTool}"]) {
                         // Use the configured Git tool
-
+                        checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/AdriIlegra/calculator.git']]])
                     }
                 }
             }
         }
-
+        stage('Build') {
+            steps {
+                // You can add your build steps here, like compiling and packaging your application.
+                // For example:
+                sh "gradle clean build --no-daemon"
+            }
+        }
         stage('Upload Artifact to JFrog') {
             steps {
                 script {
