@@ -17,7 +17,7 @@ pipeline {
             steps {
                 // You can add your build steps here, like compiling and packaging your application.
                 // For example:
-                sh "gradle clean build --no-daemon"
+                sh "gradle clean build"
             }
         }
         stage('Upload Artifact to JFrog') {
