@@ -1,34 +1,60 @@
 pipeline {
     agent any
+
+    environment {
+        CI = 'true'
+        ARTIFACTORY_SERVER_ID = 'Calculadora' // Nome do servidor de Artifactory configurado no Jenkins
+    }
+
     stages {
-        stage('Checkout from Git') {
+        stage('Connect to Git Repository') {
             steps {
                 script {
-                    // Configure the Git tool installation (replace 'GitToolName' with the actual Git tool name)
-                    def gitTool = tool name: 'GitToolName', type: 'hudson.plugins.git.GitTool'
-                    withEnv(["GIT_HOME=${gitTool}"]) {
-                        // Use the configured Git tool
-                        checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/AdriIlegra/calculator.git']]])
-                    }
+                    checkout scm
                 }
+            }
+        }
+
+        stage('Gradle clean') {
+            steps {
+                sh './gradlew clean'
+            }
+        }
+
+        stage('Gradle test') {
+            steps {
+                sh './gradlew test'
+            }
+        }
+
+        stage('Gradle build') {
+            steps {
+                sh './gradlew build'
             }
         }
 
         stage('Upload Artifact to JFrog') {
             steps {
                 script {
-                    def server = Artifactory.server 'calculadora' // Use the server name you configured
+                    def server = Artifactory.server ARTIFACTORY_SERVER_ID
                     def uploadSpec = """{
                         "files": [
                             {
-                                "pattern": "target/*.jar",  // File to be uploaded to Artifactory
-                                "target": "libs-release-local/"
+                                "pattern": "build/libs/calculadora.0.0.1-SNAPSHOT.jar",
+                                "target": "Calculadora/"
                             }
                         ]
                     }"""
-                    server.upload spec: uploadSpec
+                    server.upload(uploadSpec)
                 }
             }
         }
     }
+
+    post {
+        always {
+            junit 'build/test-results/test/*.xml'
+        }
+    }
+
 }
