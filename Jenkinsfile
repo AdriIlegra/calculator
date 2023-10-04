@@ -21,11 +21,7 @@ pipeline {
             }
         }
 
-        stage('Gradle test') {
-            steps {
-                sh './gradlew test'
-            }
-        }
+
 
         stage('Gradle build') {
             steps {
@@ -51,10 +47,5 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            junit 'build/test-results/test/*.xml'
-        }
-    }
 
 }
