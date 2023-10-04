@@ -1,14 +1,10 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '2.7.13'
+	id 'org.springframework.boot' version '2.5.4'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
-
-tasks.wrapper {
-	gradleVersion = "7.2"
-	// You can either download the binary-only version of Gradle (BIN) or
-	// the full version (with sources and documentation) of Gradle (ALL)
-	distributionType = Wrapper.DistributionType.ALL
+wrapper {
+	gradleVersion = '7.2' // Use a versão compatível do Gradle, como '7.2' ou '7.0'
 }
 
 group = 'br.com.brunnadornelles'
