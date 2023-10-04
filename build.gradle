@@ -4,6 +4,13 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
+tasks.wrapper {
+	gradleVersion = "7.2"
+	// You can either download the binary-only version of Gradle (BIN) or
+	// the full version (with sources and documentation) of Gradle (ALL)
+	distributionType = Wrapper.DistributionType.ALL
+}
+
 group = 'br.com.brunnadornelles'
 version = '0.0.1-SNAPSHOT'
 
@@ -21,6 +28,12 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+test {
+	options {
+	}
+
+	useJUnitPlatform()
+}
 tasks.named('test') {
 	useJUnitPlatform()
 }
