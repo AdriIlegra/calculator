@@ -6,6 +6,11 @@ pipeline {
         ARTIFACTORY_SERVER_ID = 'Calculadora' // Nome do servidor de Artifactory configurado no Jenkins
     }
 
+    tools {
+        gradle 'Gradle 4.4.1'
+        jdk 'Java 17'
+    }
+
     stages {
         stage('Connect to Git Repository') {
             steps {

@@ -1,13 +1,11 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '2.5.4'
+	id 'org.springframework.boot' version '2.7.3'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
-wrapper {
-	gradleVersion = '7.2' // Use a versão compatível do Gradle, como '7.2' ou '7.0'
-}
 
-group = 'br.com.brunnadornelles'
+
+group = 'br.adriana.nogueira'
 version = '0.0.1-SNAPSHOT'
 
 java {
