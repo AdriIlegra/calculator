@@ -4,11 +4,12 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
+
 group = 'br.adriana.nogueira'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = '17'
 }
 
 repositories {
@@ -22,5 +23,11 @@ dependencies {
 }
 
 test {
+	options {
+	}
+
+	useJUnitPlatform()
+}
+tasks.named('test') {
 	useJUnitPlatform()
 }

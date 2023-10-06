@@ -7,7 +7,7 @@ pipeline {
     }
 
     tools {
-        gradle 'Gradle 4.4.1'
+        gradle 'Gradle 7.2'
         jdk 'Java 17'
     }
 
