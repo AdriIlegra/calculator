@@ -3,12 +3,7 @@ pipeline {
 
     environment {
         CI = 'true'
-        ARTIFACTORY_SERVER_ID = 'Calculadora' // Nome do servidor de Artifactory configurado no Jenkins
-    }
-
-    tools {
-        gradle 'Gradle 4.4.1'
-        jdk 'Java 11'
+        ARTIFACTORY_SERVER_ID = 'calculadora' // Nome do servidor de Artifactory configurado no Jenkins
     }
 
     stages {
@@ -26,6 +21,17 @@ pipeline {
             }
         }
 
+        stage('Gradle test') {
+            steps {
+                sh './gradlew test'
+            }
+        }
+
+        stage('Gradle build') {
+            steps {
+                sh './gradlew build'
+            }
+        }
 
         stage('Upload Artifact to JFrog') {
             steps {
@@ -34,7 +40,7 @@ pipeline {
                     def uploadSpec = """{
                         "files": [
                             {
-                                "pattern": "build/libs/calculadora.0.0.1-SNAPSHOT.jar",
+                                "pattern": "build/libs/tema06.0.0.1-SNAPSHOT.jar",
                                 "target": "Calculadora/"
                             }
                         ]
@@ -45,5 +51,14 @@ pipeline {
         }
     }
 
+    post {
+        always {
+            junit 'build/test-results/test/*.xml'
+        }
+    }
 
 }
+
+
+
+
