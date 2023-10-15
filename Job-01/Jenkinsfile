@@ -1,52 +1,26 @@
 pipeline {
     agent any
 
-    environment {
-        CI = 'true'
-        ARTIFACTORY_SERVER_ID = 'artifcatory_credential' // Nome do servidor de Artifactory configurado no Jenkins
-    }
-
     stages {
-        stage('Connect to Git Repository') {
+        stage('Build') {
             steps {
-                script {
-                    checkout scm
-                }
+                // Execute as etapas de construção do seu projeto aqui
             }
         }
 
-        stage('Gradle clean') {
+        stage('Upload to Artifactory') {
             steps {
-                sh './gradlew clean'
-            }
-        }
-
-        stage('Gradle test') {
-            steps {
-                sh './gradlew test'
-            }
-        }
-
-        stage('Gradle build') {
-            steps {
-                sh './gradlew build'
-            }
-        }
-
-        stage('Upload Artifact to JFrog') {
-            steps {
-                script {
-                    def server = Artifactory.server ARTIFACTORY_SERVER_ID
-                    def uploadSpec = """{
+                rtUpload (
+                    serverId: 'ArtifactoryServer', // Nome do servidor configurado no Jenkins
+                    spec: """{
                         "files": [
                             {
-                                "pattern": "build/libs/tema06.0.0.1-SNAPSHOT.jar",
-                                "target": "Calculadora/"
+                                "pattern": "path/to/your/artifact.zip",
+                                "target": "repo-name/path/in/artifactory/artifact.zip"
                             }
                         ]
                     }"""
-                    server.upload(uploadSpec)
-                }
+                )
             }
         }
     }
