@@ -3,19 +3,34 @@ pipeline {
 
     environment {
         CI = 'true'
-        ARTIFACTORY_TOKEN = credentials('artfactory-token')
+        ARTIFACTORY_TOKEN = credentials('artifactory-token')
     }
 
     stages {
+        stage('Build') {
+            steps {
+                sh 'echo "Construindo o aplicativo..."'
+                // Adicione comandos reais de construção aqui
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'echo "Executando testes..."'
+                // Adicione comandos reais de teste aqui
+            }
+        }
+
         stage('Upload to Artifactory') {
             steps {
                 script {
+                    def server = Artifactory.server 'calculadora' // 'calculadora' deve ser o nome configurado no Jenkins
 
                     def uploadSpec = """{
                         "files": [
                             {
-                                "pattern": "/home/gradle/src/build/libs/tema-06-0.0.1-SNAPSHOT.jar",
-                                "target": "calculadora/"
+                                "pattern": "/caminho/para/o/seu/arquivo/aqui.jar", // Substitua pelo caminho do seu arquivo
+                                "target": "calculadora/" // Substitua se necessário
                             }
                         ]
                     }"""
