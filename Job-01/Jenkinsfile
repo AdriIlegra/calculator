@@ -18,10 +18,11 @@ pipeline {
                                 "pattern": "artifact.zip",
                                 "target": "repo-name/path/in/artifactory/artifact.zip"
                             }
-                        ]
-                    }"""
+                            ]
+                            }"""
                 )
             }
         }
     }
 }
+
