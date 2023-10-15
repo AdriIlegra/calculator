@@ -44,9 +44,10 @@ pipeline {
                                 "target": "Calculadora/"
                             }
                         ]
-                    }
-
+                    }"""
+                    server.upload(uploadSpec)
                 }
             }
         }
     }
+}
