@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         CI = 'true'
-        ARTIFACTORY_SERVER_ID = 'calculadora' // Nome do servidor de Artifactory configurado no Jenkins
+        ARTIFACTORY_SERVER_ID = 'artifcatory_credential' // Nome do servidor de Artifactory configurado no Jenkins
     }
 
     stages {
@@ -44,20 +44,12 @@ pipeline {
                                 "target": "Calculadora/"
                             }
                         ]
-                    }"""
-                    server.upload(uploadSpec)
+                    }
+
                 }
             }
         }
     }
-
-    post {
-        always {
-            junit 'build/test-results/test/*.xml'
-        }
-    }
-
-}
 
 
 
