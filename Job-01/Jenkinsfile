@@ -3,7 +3,8 @@ pipeline {
 
        environment {
            CI = 'true'
-           ARTIFACTORY_SERVER_ID = 'calculadora' // Nome do servidor de Artifactory configurado no Jenkins
+           ARTIFACTORY_ACCESS_TOKEN = credentials('artfactory-token')
+           JFROG-PASSWORD = credentials('Jfrog-password')
        }
     stages {
         stage('Upload to Artifactory') {
