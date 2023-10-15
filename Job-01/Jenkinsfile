@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         CI = 'true'
-        ARTIFACTORY-TOKEN = credentials('artfactory-token')
+        ARTIFACTORY_TOKEN = credentials('artifactory-token')
         JFROG_PASSWORD = credentials('jfrog-password')
     }
 
