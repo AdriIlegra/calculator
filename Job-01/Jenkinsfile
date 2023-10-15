@@ -4,7 +4,6 @@ pipeline {
     environment {
         CI = 'true'
         ARTIFACTORY_TOKEN = credentials('artifactory-token')
-        JFROG_PASSWORD = credentials('jfrog-password')
     }
 
     stages {
