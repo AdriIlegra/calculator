@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         CI = 'true'
-        ARTIFACTORY_TOKEN = credentials('artifactory-token')
+        ARTIFACTORY_TOKEN = credentials('artfactory-token')
     }
 
     stages {
