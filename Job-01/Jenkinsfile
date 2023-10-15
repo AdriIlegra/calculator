@@ -11,11 +11,11 @@ pipeline {
         stage('Upload to Artifactory') {
             steps {
                 rtUpload (
-                    serverId: 'ArtifactoryServer', // Nome do servidor configurado no Jenkins
+                    serverId: 'artifcatory_credential', // Nome do servidor configurado no Jenkins
                     spec: """{
                         "files": [
                             {
-                                "pattern": "path/to/your/artifact.zip",
+                                "pattern": "artifact.zip",
                                 "target": "repo-name/path/in/artifactory/artifact.zip"
                             }
                         ]
