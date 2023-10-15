@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+     agent any
+
+       environment {
+           CI = 'true'
+           ARTIFACTORY_SERVER_ID = 'calculadora' // Nome do servidor de Artifactory configurado no Jenkins
+       }
     stages {
         stage('Upload to Artifactory') {
             steps {
