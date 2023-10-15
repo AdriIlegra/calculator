@@ -1,11 +1,12 @@
 pipeline {
-     agent any
+    agent any
 
-       environment {
-           CI = 'true'
-           ARTIFACTORY_ACCESS_TOKEN = credentials('artfactory-token')
-           JFROG-PASSWORD = credentials('Jfrog-password')
-       }
+    environment {
+        CI = 'true'
+        ARTIFACTORY-TOKEN = credentials('artfactory-token')
+        JFROG_PASSWORD = credentials('jfrog-password')
+    }
+
     stages {
         stage('Upload to Artifactory') {
             steps {
