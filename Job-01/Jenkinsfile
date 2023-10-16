@@ -3,7 +3,9 @@ pipeline {
 
     environment {
         CI = 'true'
+        ARTFACTORY_CREDENTIALS = credentials('artfactory-admin')
         ARTIFACTORY_TOKEN = credentials('artfactory-token')
+
     }
 
     stages {
@@ -25,7 +27,6 @@ pipeline {
             steps {
                 script {
                     def server = Artifactory.server 'calculadora' // 'calculadora' deve ser o nome configurado no Jenkins
-
                     def uploadSpec = """{
                         "files": [
                             {
