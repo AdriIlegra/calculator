@@ -4,7 +4,6 @@ pipeline {
     environment {
         CI = 'true'
         ARTFACTORY_CREDENTIALS = credentials('artfactory-admin')
-        ARTIFACTORY_TOKEN = credentials('artfactory-token')
 
     }
 
