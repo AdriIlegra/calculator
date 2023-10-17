@@ -14,4 +14,3 @@ stage('Artifactory') {
         }
     }
 }
-```
