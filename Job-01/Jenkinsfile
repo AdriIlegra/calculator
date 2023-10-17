@@ -1,33 +1,41 @@
 pipeline {
     agent any
-
+    tools {
+        jfrog 'jfrog-cli'
+    }
+    environment {
+        DOCKER_IMAGE_NAME = "$DOCKER_REG_URL/docker-local/hello-frog:1.0.0"
+    }
     stages {
-        stage('Instalação do JFrog CLI') {
+        stage('Clone') {
+            steps {
+                git branch: 'master', url: "https://github.com/jfrog/project-examples.git"
+            }
+        }
+
+        stage('Build Docker image') {
             steps {
                 script {
-                    // Define a URL do arquivo de instalação do JFrog CLI
-                    def jfrogCliUrl = 'https://jfrog-cli-installers.jfrog.io/jfrog-cli-linux-amd64/jfrog'
-
-                    // Define o local onde o JFrog CLI será instalado
-                    def jfrogCliPath = "${tool name: 'jfrog-cli', type: 'Tool Installation'}"
-
-                    // Baixa e instala o JFrog CLI
-                    sh "curl -fL ${jfrogCliUrl} -o ${jfrogCliPath} && chmod +x ${jfrogCliPath}"
+                    docker.build("$DOCKER_IMAGE_NAME", 'docker-oci-examples/docker-example')
                 }
             }
         }
 
-        stage('Upload de Artefatos') {
+        stage('Scan and push image') {
             steps {
-                script {
-                    // Defina as credenciais para autenticação com o JFrog Artifactory
-                    def jfrogUser = 'admin'
-                    def jfrogPassword = '123Mudar@'
+                dir('docker-oci-examples/docker-example/') {
+                    // Scan Docker image for vulnerabilities
+                    jf 'docker scan $DOCKER_IMAGE_NAME'
 
-                    // Execute o comando de upload com o JFrog CLI
-                    sh "${tool name: 'jfrog-cli', type: 'Tool Installation'} rt config --url=https://localhost:8082/artifactory --user=${jfrogUser} --password=${jfrogPassword}"
-                    sh "${tool name: 'jfrog-cli', type: 'Tool Installation'} rt upload --recursive --props=build.name=my-build-name --build-number=1 meu-arquivo.txt meu-repo/my-path/"
+                    // Push image to Artifactory
+                    jf 'docker push $DOCKER_IMAGE_NAME'
                 }
+            }
+        }
+
+        stage('Publish build info') {
+            steps {
+                jf 'rt build-publish'
             }
         }
     }
