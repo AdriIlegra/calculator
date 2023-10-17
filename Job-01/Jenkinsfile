@@ -3,20 +3,29 @@ pipeline {
     tools {
         jfrog 'jfrog-cli'
     }
-
     stages {
-        stage('Build') {
+        stage('Clone') {
             steps {
-                sh 'jfrog rt c --url=http://localhost:8082/artifactory --user=admin --password=123Mudar@ --interactive=false'
-                sh 'jfrog rt bag my-local-repo my-local-repo'
-                sh 'jfrog rt bp my-local-repo my-local-repo 1'
+                git branch: 'master', url: "https://github.com/AdriIlegra/calculator.git"
             }
         }
-    }
 
-    post {
-        always {
-            sh 'jfrog rt bd my-local-repo 1'
+        stage('Exec Gradle commands') {
+            steps {
+                dir('gradle-examples/gradle-example-ci-server') {
+                    // Configure Gradle project's repositories
+                    jf 'gradle-config --repo-resolve libs-release --repo-deploy libs-release-local'
+
+                    // Install and publish project
+                    jf 'gradle clean artifactoryPublish'
+                }
+            }
+        }
+
+        stage('Publish build info') {
+            steps {
+                jf 'rt build-publish'
+            }
         }
     }
 }
