@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     // Configuração do servidor JFrog Artifactory (certifique-se de que as configurações do servidor no Jenkins estão corretas)
-                    def server = Artifactory.server 'calculadora
+                    def server = Artifactory.server 'calculadora'
 
                     // Defina as configurações do servidor JFrog Artifactory (URL, credenciais, etc.)
                     def rtConfig = Artifactory.newServer url: 'http://localhost:8082/artifactory', credentialsId: 'artifactory'
