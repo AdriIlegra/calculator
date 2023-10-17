@@ -1,21 +1,16 @@
 pipeline {
     agent any
 
-    environment {
-        APP_REPO = 'calculadora' // Substitua pelo nome do seu repositório no Artifactory
-        VERSION = '2.50.1' // Substitua pela versão do seu aplicativo
-    }
-
     stages {
         stage('Upload para o Artifactory') {
             steps {
                 script {
-                    def server = Artifactory.server 'calculadora' // Substitua pelo nome do seu servidor no Artifactory
+                    def server = Artifactory.server 'calculadora'
                     def uploadSpec = """{
                         "files": [
                             {
                                 "pattern": "**/target/*.war",
-                                "target": "releases/${APP_REPO}/${VERSION}/"
+                                "target": "releases/${APP_REPO}/${version.trim()}/"
                             }
                         ]
                     }"""
