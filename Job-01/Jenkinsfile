@@ -1,23 +1,20 @@
 pipeline {
     agent any
-    tools {
-        jfrog 'Jfrog-cli'
+
+    environment {
+        ARTIFACTORY_SERVER = 'calculadora' // Nome da credencial global
     }
 
     stages {
         stage('Build') {
             steps {
-                sh 'jfrog rt c --url=http://localhost:8081/artifactory --user=admin --password=password --interactive=false'
-                sh 'jfrog rt bag my-local-repo my-local-repo'
-                sh 'jfrog rt bp my-local-repo my-local-repo'
+                script {
+                    def server = Artifactory.server ARTIFACTORY_SERVER
+                    server.deployer.createMavenBuildInfo = true
+                    server.resolver.createMavenBuildInfo = true
+                    server.deployer.mavenBuildInfo = server.resolver.mavenBuildInfo
+                }
             }
         }
     }
-
-    post {
-        always {
-            sh 'jfrog rt bd my-local-repo'
-        }
-    }
-
 }
