@@ -1,31 +1,25 @@
 pipeline {
     agent any
-
+    tools {
+        jfrog 'jfrog-cli'
+    }
     stages {
-
-        stage('Build') {
+        stage('Exec Gradle commands') {
             steps {
-                sh './gradlew clean build'
+                dir('gradle-examples/gradle-example-ci-server') {
+                    // Configure Gradle project's repositories
+                    jf 'gradle-config --repo-resolve libs-release --repo-deploy libs-release-local'
+
+                    // Install and publish project
+                    jf 'gradle clean artifactoryPublish'
+                }
             }
         }
 
-        stage('Artifactory') {
+        stage('Publish build info') {
             steps {
-                rtUpload (
-                    serverId: 'artifactory',
-                    spec: '''{
-                        "files": [
-                            {
-                                "pattern": "build/libs/*.jar",
-                                "target": "libs/"
-                            }
-                        ]
-                    }'''
-                )
+                jf 'rt build-publish'
             }
         }
     }
 }
-
-
-
