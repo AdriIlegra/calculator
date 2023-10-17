@@ -5,7 +5,7 @@ pipeline {
         stage('Test JFrog Artifactory Credentials') {
             steps {
                 script {
-                    def server = Artifactory.server 'calculadora'
+                    def server = Artifactory.server 'artifactory'
 
                     // Exemplo de listagem de artefatos de um repositório
                     def repo = 'seu-repo-de-teste'
