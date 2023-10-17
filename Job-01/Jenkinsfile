@@ -3,15 +3,11 @@ pipeline {
     tools {
         jfrog 'jfrog-cli'
     }
-    stages {
-        stage('Exec Gradle commands') {
+     stages {
+        stage('Download dependencies') {
             steps {
-                dir('gradle-examples/gradle-example-ci-server') {
-                    // Configure Gradle project's repositories
-                    jf 'gradle-config --repo-resolve libs-release --repo-deploy libs-release-local'
+                jf 'rt gradle-resolve'
 
-                    // Install and publish project
-                    jf 'gradle clean artifactoryPublish'
                 }
             }
         }
