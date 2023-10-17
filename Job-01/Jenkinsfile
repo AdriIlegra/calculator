@@ -26,12 +26,13 @@ pipeline {
             steps {
                 script {
                     def server = Artifactory.server 'calculadora' // 'calculadora' deve ser o nome configurado no Jenkins
-                    def uploadSpec = """{
-                        "files": [
-                            {
-                                "pattern": "/caminho/para/o/seu/arquivo/aqui.jar", // Substitua pelo caminho do seu arquivo
-                                "target": "calculadora/" // Substitua se necessário
-                            }
+                   def uploadSpec = """{
+                                          "files": [
+                                              {
+                                                  "pattern": "build/libs/tema06.0.0.1-SNAPSHOT.jar",
+                                                  "target": "calculadora/"
+                                              }
+                                          ]
                         ]
                     }"""
                     server.upload(uploadSpec)
