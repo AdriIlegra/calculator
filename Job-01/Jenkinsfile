@@ -1,16 +1,27 @@
-stage('Artifactory') {
-    steps {
-        script {
-            def server = Artifactory.server 'artifactory'
-            def uploadSpec = """{
-                "files": [
-                    {
-                        "pattern": "target/*.jar",
-                        "target": "libs-release-local"
-                    }
-                ]
-            }"""
-            server.upload(uploadSpec)
+pipeline {
+    agent any
+
+    environment {
+        APP_REPO = 'calculadora' // Substitua pelo nome do seu repositório no Artifactory
+        VERSION = '2.50.1' // Substitua pela versão do seu aplicativo
+    }
+
+    stages {
+        stage('Upload para o Artifactory') {
+            steps {
+                script {
+                    def server = Artifactory.server 'artifactory'
+                    def uploadSpec = """{
+                        "files": [
+                            {
+                                "pattern": "**/target/*.war",
+                                "target": "releases/${APP_REPO}/${VERSION}/"
+                            }
+                        ]
+                    }"""
+                    server.upload(uploadSpec)
+                }
+            }
         }
     }
 }
