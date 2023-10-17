@@ -3,19 +3,19 @@ pipeline {
     tools {
         jfrog 'jfrog-cli'
     }
-     stages {
-        stage('Download dependencies') {
-            steps {
-                jf 'rt gradle-resolve'
 
-                }
-            }
-        }
-
-        stage('Publish build info') {
+    stages {
+        stage('Build') {
             steps {
-                jf 'rt build-publish'
+                sh 'jfrog rt c --url=http://localhost:8082/artifactory --user=admin --password=123Mudar@ --interactive=false'
+                sh 'jfrog rt bag my-local-repo my-local-repo'
+                sh 'jfrog rt bp my-local-repo my-local-repo 1'
             }
         }
     }
-}
+
+    post {
+        always {
+            sh 'jfrog rt bd my-local-repo 1'
+        }
+    }
