@@ -1,32 +1,17 @@
 stage('Artifactory') {
     steps {
         script {
-            // Certifique-se de que o JFrog CLI esteja instalado no Jenkins.
-            def jfrogCliPath = tool name: 'jfrog-cli', type: 'Tool Type do Jenkins'
-            if (jfrogCliPath) {
-                // Defina as credenciais de autenticação (se necessário).
-                withCredentials([usernamePassword(credentialsId: 'artifactory', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_API_KEY')]) {
-                    def buildInfo = Artifactory.newServer serverId: 'artifactory', url: 'https://artifactory.example.com/artifactory', username: ARTIFACTORY_USER, password: ARTIFACTORY_API_KEY
-
-                    // Defina o caminho do arquivo de especificação (File Spec).
-                    def specFile = writeJSON file: 'spec.json', json: [
-                        files: [
-                            [
-                                pattern: 'build/libs/*.jar',
-                                target: 'calculadora/' // Caminho de destino no Artifactory
-                            ]
-                        ]
-                    ]
-
-                    // Execute o comando de upload com o JFrog CLI.
-                    sh "${jfrogCliPath}/jfrog rt u --spec=${specFile} --server-id=artifactory"
-
-                    // Você também pode incluir outras opções, como --build-name e --build-number para gravar informações do build no Artifactory.
-                    // Consulte a documentação do JFrog CLI para mais opções.
-                }
-            } else {
-                error("JFrog CLI não está instalado. Por favor, instale-o no Jenkins.")
-            }
+            def server = Artifactory.server 'artifactory'
+            def uploadSpec = """{
+                "files": [
+                    {
+                        "pattern": "target/*.jar",
+                        "target": "libs-release-local"
+                    }
+                ]
+            }"""
+            server.upload(uploadSpec)
         }
     }
 }
+```
