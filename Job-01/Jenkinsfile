@@ -1,19 +1,32 @@
 pipeline {
     agent any
 
+    environment {
+        // Defina as variáveis de ambiente necessárias, como as credenciais do JFrog e o nome do servidor
+        ARTIFACTORY_SERVER = 'calculadora'
+        ARTIFACTORY_URL = 'http://192.168.100.121:8082'
+        ARTIFACTORY_CREDENTIALS_ID = 'artifactory-admin'
+    }
+
     stages {
-        stage('Upload to Artifactory') {
+        stage('Upload to JFrog Artifactory') {
             steps {
                 script {
-                    def server = Artifactory.server 'calculadora'
+                    // Configuração do servidor JFrog Artifactory
+                    def server = Artifactory.server ARTIFACTORY_SERVER
+                    def rtConfig = Artifactory.newServer url: ARTIFACTORY_URL, credentialsId: ARTIFACTORY_CREDENTIALS_ID
+
+                    // Especificação de upload
                     def uploadSpec = """{
                         "files": [
                             {
-                                "pattern": "build/libs/*.jar",
-                                "target": "caluladora/"
+                                "pattern": "build/libs/*.jar
+                                "target": "calculadora/"
                             }
                         ]
                     }"""
+
+                    // Executa o upload para o JFrog Artifactory
                     server.upload(uploadSpec)
                 }
             }
