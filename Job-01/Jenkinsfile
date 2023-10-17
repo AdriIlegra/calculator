@@ -1,22 +1,23 @@
 pipeline {
     agent any
+    tools {
+        jfrog 'Jfrog-cli'
+    }
 
     stages {
-        stage('Download Artifacts from JFrog Artifactory') {
+        stage('Build') {
             steps {
-                script {
-                    // Configuração do servidor JFrog Artifactory (certifique-se de que as configurações do servidor no Jenkins estão corretas)
-                    def server = Artifactory.server 'calculadora'
-
-                    // Defina as configurações do servidor JFrog Artifactory (URL, credenciais, etc.)
-                    def rtConfig = Artifactory.newServer url: 'http://localhost:8082/artifactory', credentialsId: 'artifactory'
-
-                    // Informações do repositório e do artefato a ser baixado
-                    def repo = 'calculadora'
-                    def artifactPath = 'build/libs/calculadora-0.0.1-SNAPSHOT.jar'
-                    def destination = 'calculadora/'
-                }
+                echo 'Building..'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying....'
             }
         }
     }
-}
