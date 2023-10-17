@@ -19,3 +19,4 @@ pipeline {
             sh 'jfrog rt bd my-local-repo 1'
         }
     }
+}
