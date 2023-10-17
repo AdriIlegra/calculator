@@ -24,3 +24,24 @@ stages {
         }
     }
 }
+post {
+    always {
+        cleanWs()
+        sh 'echo "I will always run"'
+    }
+    success {
+        sh 'echo "I will run only if successful"'
+    }
+    failure {
+        sh 'echo "I will run only if failed"'
+    }
+    unstable {
+        sh 'echo "I will run only if the run was marked as unstable"'
+    }
+    changed {
+        sh 'echo "I will run only if the state of the Pipeline has changed"'
+        sh 'echo "For example, if the Pipeline was previously failing but is now successful"'
+    }
+}
+}
+```
