@@ -2,30 +2,41 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Build') {
+        stage('Instalar JFrog CLI') {
             steps {
-                sh './gradlew clean build'
+                script {
+                    // Script de instalação do JFrog CLI
+                    sh '''
+                    #!/bin/bash
+                    wget -O jfrog https://releases.jfrog.io/artifactory/jfrog-cli/v2/jfrog-linux-amd64
+                    chmod +x jfrog
+                    sudo mv jfrog /usr/local/bin/
+                    '''
+                }
             }
         }
 
-        stage('Artifactory') {
+        stage('Construir e Implantar no Artifactory') {
             steps {
-                rtUpload(
-                    serverId: "artifactory",
-                    spec: """{
-                        "files": [
-                        {
-                            "pattern": "build/libs/tema-06-0.0.1-SNAPSHOT.jar",
-                            "target": "calculadora/"
-                        }
-                        ]
-                    } """
+                script {
+                    // Configurar o JFrog CLI para usar as credenciais e o servidor Artifactory
+                    withCredentials([usernamePassword(credentialsId: 'artifactory', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_API_KEY')]) {
+                        sh "jfrog rt config meu_servidor --url=https://artifactory.exemplo.com/artifactory --user=\$ARTIFACTORY_USER --apikey=\$ARTIFACTORY_API_KEY"
+                    }
 
-
-                    )
+                    // Realizar o upload de artefatos para o Artifactory
+                    sh "jfrog rt u <seus comandos de upload aqui>"
+                }
             }
         }
+    }
 
+    post {
+        success {
+            echo 'Pipeline executado com sucesso!'
+        }
+        failure {
+            echo 'Ocorreu uma falha na pipeline.'
+        }
     }
 }
