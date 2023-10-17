@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        ARTIFACTORY_SERVER = 'calculadora' // Nome da credencial global
+        ARTIFACTORY_SERVER = 'jfrog-cli' // Nome da credencial global
     }
 
     stages {
