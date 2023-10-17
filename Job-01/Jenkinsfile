@@ -1,42 +1,32 @@
-pipeline {
-    agent any
+stage('Artifactory') {
+    steps {
+        script {
+            // Certifique-se de que o JFrog CLI esteja instalado no Jenkins.
+            def jfrogCliPath = tool name: 'jfrog-cli', type: 'Tool Type do Jenkins'
+            if (jfrogCliPath) {
+                // Defina as credenciais de autenticação (se necessário).
+                withCredentials([usernamePassword(credentialsId: 'artifactory', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_API_KEY')]) {
+                    def buildInfo = Artifactory.newServer serverId: 'artifactory', url: 'https://artifactory.example.com/artifactory', username: ARTIFACTORY_USER, password: ARTIFACTORY_API_KEY
 
-    stages {
-        stage('Instalar JFrog CLI') {
-            steps {
-                script {
-                    // Script de instalação do JFrog CLI
-                    sh '''
-                    #!/bin/bash
-                    wget -O jfrog https://releases.jfrog.io/artifactory/jfrog-cli/v2/jfrog-linux-amd64
-                    chmod +x jfrog
-                    sudo mv jfrog /usr/local/bin/
-                    '''
+                    // Defina o caminho do arquivo de especificação (File Spec).
+                    def specFile = writeJSON file: 'spec.json', json: [
+                        files: [
+                            [
+                                pattern: 'build/libs/*.jar',
+                                target: 'calculadora/' // Caminho de destino no Artifactory
+                            ]
+                        ]
+                    ]
+
+                    // Execute o comando de upload com o JFrog CLI.
+                    sh "${jfrogCliPath}/jfrog rt u --spec=${specFile} --server-id=artifactory"
+
+                    // Você também pode incluir outras opções, como --build-name e --build-number para gravar informações do build no Artifactory.
+                    // Consulte a documentação do JFrog CLI para mais opções.
                 }
+            } else {
+                error("JFrog CLI não está instalado. Por favor, instale-o no Jenkins.")
             }
-        }
-
-        stage('Construir e Implantar no Artifactory') {
-            steps {
-                script {
-                    // Configurar o JFrog CLI para usar as credenciais e o servidor Artifactory
-                    withCredentials([usernamePassword(credentialsId: 'artifactory', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_API_KEY')]) {
-                        sh "jfrog rt config meu_servidor --url=https://artifactory.exemplo.com/artifactory --user=\$ARTIFACTORY_USER --apikey=\$ARTIFACTORY_API_KEY"
-                    }
-
-                    // Realizar o upload de artefatos para o Artifactory
-                    sh "jfrog rt u <seus comandos de upload aqui>"
-                }
-            }
-        }
-    }
-
-    post {
-        success {
-            echo 'Pipeline executado com sucesso!'
-        }
-        failure {
-            echo 'Ocorreu uma falha na pipeline.'
         }
     }
 }
