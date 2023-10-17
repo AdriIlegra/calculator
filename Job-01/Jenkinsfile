@@ -1,20 +1,31 @@
 pipeline {
     agent any
 
-    environment {
-        ARTIFACTORY_SERVER = 'jfrog-cli' // Nome da credencial global
-    }
-
     stages {
+
         stage('Build') {
             steps {
-                script {
-                    def server = Artifactory.server ARTIFACTORY_SERVER
-                    server.deployer.createMavenBuildInfo = true
-                    server.resolver.createMavenBuildInfo = true
-                    server.deployer.mavenBuildInfo = server.resolver.mavenBuildInfo
-                }
+                sh './gradlew clean build'
             }
         }
+
+        stage('Artifactory') {
+            steps {
+                rtUpload(
+                    serverId: "calculadora",
+                    spec: """{
+                        "files": [
+                        {
+                            "pattern": "build/libs/tema-final-01-calculator-0.0.1-SNAPSHOT.jar",
+                            "target": "calculadora"
+                        }
+                        ]
+                    } """
+
+
+                    )
+            }
+        }
+
     }
 }
