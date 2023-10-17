@@ -25,7 +25,6 @@ pipeline {
         stage('Upload to Artifactory') {
             steps {
                 script {
-                    def server = Artifactory.server 'calculadora' // 'calculadora' deve ser o nome configurado no Jenkins
                    def uploadSpec = """{
                                           "files": [
                                               {
