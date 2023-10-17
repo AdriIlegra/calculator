@@ -1,37 +1,17 @@
 pipeline {
     agent any
 
-    environment {
-        CI = 'true'
-        ARTFACTORY_CREDENTIALS = credentials('artfactory-admin')
-
-    }
-
     stages {
-        stage('Build') {
-            steps {
-                sh 'echo "Construindo o aplicativo..."'
-                // Adicione comandos reais de construção aqui
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'echo "Executando testes..."'
-                // Adicione comandos reais de teste aqui
-            }
-        }
-
         stage('Upload to Artifactory') {
             steps {
                 script {
-                   def uploadSpec = """{
-                                          "files": [
-                                              {
-                                                  "pattern": "build/libs/tema06.0.0.1-SNAPSHOT.jar",
-                                                  "target": "calculadora/"
-                                              }
-                                          ]
+                    def server = Artifactory.server 'artfactory-admin'
+                    def uploadSpec = """{
+                        "files": [
+                            {
+                                "pattern": "build/libs/*.jar",
+                                "target": "caluladora/"
+                            }
                         ]
                     }"""
                     server.upload(uploadSpec)
