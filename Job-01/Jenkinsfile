@@ -7,18 +7,17 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
+                sh 'jfrog rt c --url=http://localhost:8081/artifactory --user=admin --password=password --interactive=false'
+                sh 'jfrog rt bag my-local-repo my-local-repo'
+                sh 'jfrog rt bp my-local-repo my-local-repo'
             }
         }
     }
+
+    post {
+        always {
+            sh 'jfrog rt bd my-local-repo'
+        }
+    }
+
 }
