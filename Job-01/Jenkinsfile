@@ -11,21 +11,19 @@ pipeline {
 
         stage('Artifactory') {
             steps {
-                rtUpload(
-                    serverId: "calculadora",
-                    spec: """{
+                rtUpload (
+                    serverId: 'artifactory',
+                    spec: '''{
                         "files": [
-                        {
-                            "pattern": "build/libs/tema-final-01-calculator-0.0.1-SNAPSHOT.jar",
-                            "target": "calculadora"
-                        }
+                            {
+                                "pattern": "build/libs/*.jar",
+                                "target": "libs/"
+                            }
                         ]
-                    } """
-
-
-                    )
+                    }'''
+                )
             }
         }
-
     }
-}
+
+
