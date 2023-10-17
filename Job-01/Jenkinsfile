@@ -1,30 +1,33 @@
 pipeline {
     agent any
-    tools {
-        jfrog "jfrog-cli"
-    }
+
     stages {
-        stage('Clone') {
+        stage('Instalação do JFrog CLI') {
             steps {
-                git branch: 'master', url: "https://github.com/AdriIlegra/calculator.git"
-            }
-        }
+                script {
+                    // Define a URL do arquivo de instalação do JFrog CLI
+                    def jfrogCliUrl = 'https://jfrog-cli-installers.jfrog.io/jfrog-cli-linux-amd64/jfrog'
 
-        stage('Exec Gradle commands') {
-            steps {
-                dir('gradle-examples/gradle-example-ci-server') {
-                    // Configure Gradle project's repositories
-                    jf 'gradle-config --repo-resolve libs-release --repo-deploy libs-release-local'
+                    // Define o local onde o JFrog CLI será instalado
+                    def jfrogCliPath = "${tool name: 'jfrog-cli', type: 'Tool Installation'}"
 
-                    // Install and publish project
-                    jf 'gradle clean artifactoryPublish'
+                    // Baixa e instala o JFrog CLI
+                    sh "curl -fL ${jfrogCliUrl} -o ${jfrogCliPath} && chmod +x ${jfrogCliPath}"
                 }
             }
         }
 
-        stage('Publish build info') {
+        stage('Upload de Artefatos') {
             steps {
-                jf 'rt build-publish'
+                script {
+                    // Defina as credenciais para autenticação com o JFrog Artifactory
+                    def jfrogUser = 'admin'
+                    def jfrogPassword = '123Mudar@'
+
+                    // Execute o comando de upload com o JFrog CLI
+                    sh "${tool name: 'jfrog-cli', type: 'Tool Installation'} rt config --url=https://localhost:8082/artifactory --user=${jfrogUser} --password=${jfrogPassword}"
+                    sh "${tool name: 'jfrog-cli', type: 'Tool Installation'} rt upload --recursive --props=build.name=my-build-name --build-number=1 meu-arquivo.txt meu-repo/my-path/"
+                }
             }
         }
     }
