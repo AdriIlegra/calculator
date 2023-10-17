@@ -10,7 +10,7 @@ pipeline {
         stage('Upload para o Artifactory') {
             steps {
                 script {
-                    def server = Artifactory.server 'artifactory'
+                    def server = Artifactory.server 'calculadora
                     def uploadSpec = """{
                         "files": [
                             {
