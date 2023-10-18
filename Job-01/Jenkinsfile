@@ -22,7 +22,7 @@ pipeline {
             steps {
                     rtServer (
                         id: env.ARTIFACTORY_SERVER_ID,
-                        credentialsId: env.ARTIFACTORY_CREDENTIALS
+                        credentialsId: env.ARTIFACTORY_CREDENTIALS,
                         url: env.ARTIFACTORY_SERVER_URL
 
                     )
