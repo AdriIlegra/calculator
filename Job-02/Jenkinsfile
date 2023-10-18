@@ -6,12 +6,17 @@ pipeline {
     }
 
     stages {
+        stage('Initialize Packer') {
+            steps {
+                sh 'packer init ./Job-02/packer-template.pkr.hcl'
+            }
+        }
+
         stage('Build') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker_hub_credentials', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                     sh '''
                        packer build -var 'dockerhub_username=adriananogueira' -var 'dockerhub_password=123Mudar@' ./Job-02/packer-template.pkr.hcl
-
                     '''
                 }
             }

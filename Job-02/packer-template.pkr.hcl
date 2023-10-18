@@ -6,6 +6,18 @@ variable "dockerhub_username" {
 variable "dockerhub_password" {
   type    = string
 }
+packer {
+  required_plugins {
+    docker = {
+      source  = "github.com/hashicorp/docker"
+      version = ">= 1.0.0"
+    }
+    ansible = {
+      source  = "github.com/hashicorp/ansible"
+      version = "~> 1"
+    }
+  }
+}
 
 source "docker" "ubuntu" {
   image = "ubuntu:18.04"
