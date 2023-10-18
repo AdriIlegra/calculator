@@ -19,6 +19,10 @@ packer {
   }
 }
 
+source "docker" "ubuntu" {
+  image = "ubuntu:latest"
+}
+
 build {
   name    = "tema-01-final"
   sources = ["docker.ubuntu"]
