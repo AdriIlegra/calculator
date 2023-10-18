@@ -46,12 +46,9 @@ build {
     inline = [
       "docker login -u ${var.dockerhub_username} -p ${var.dockerhub_password}",
       "docker build -t ${var.dockerhub_username}/calculator .",
-      "docker push ${var.dockerhub_username}/calculator"
+      "docker push ${var.dockerhub_username}/calculator",
+      "docker tag ${var.dockerhub_username}/calculator:latest your-docker-repo/calculator:latest",
+      "docker push your-docker-repo/calculator:latest"
     ]
   }
-}
-
-post-processor "docker-tag" {
-  repository = "your-docker-repo/calculator"
-  tag        = "latest"
 }
