@@ -10,7 +10,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker_hub_credentials', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                     sh '''
-                       packer build -var 'dockerhub_username=adriananogueira' -var 'dockerhub_password=123Mudar@' Job-02/parcker-template.pkr.hcl
+                       packer build -var 'dockerhub_username=adriananogueira' -var 'dockerhub_password=123Mudar@' ./Job-02/packer-template.pkr.hcl
 
                     '''
                 }
