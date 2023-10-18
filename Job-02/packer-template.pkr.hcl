@@ -29,7 +29,7 @@ source "docker" "ubuntu" {
 }
 
 build {
-  name = "Job-02"
+  name    = "Job-02"
   sources = ["source.docker.ubuntu"]
 
 
@@ -52,10 +52,11 @@ build {
   provisioner "ansible-local" {
     playbook_file = "${var.ansible_playbook_path}"
 
-  post-processors {
-    post-processor "docker-tag" {
-      repository = "adriananogueira/tema-final-01"
-      tags       = ["0.1"]
+    post-processors {
+      post-processor "docker-tag" {
+        repository = "adriananogueira/tema-final-01"
+        tags       = ["0.1"]
+      }
     }
   }
 }
