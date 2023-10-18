@@ -20,7 +20,7 @@ packer {
 }
 
 build {
-  name    = "my-docker-image"
+  name    = "tema-01-final"
   sources = ["docker.ubuntu"]
 
   provisioner "shell" {
