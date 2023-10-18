@@ -37,11 +37,11 @@ build {
   }
 
   provisioner "ansible-local" {
-    playbook_file = "/Job-2/playbook.yml"
+    playbook_file = "playbook.yml"
   }
 
   provisioner "file" {
-    source      = "calculator.jar"
+    source      = "target/calculator.jar"
     destination = "/calculator.jar"
   }
 
