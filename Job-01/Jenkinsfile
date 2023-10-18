@@ -1,31 +1,36 @@
 pipeline {
     agent any
 
-    stages {
-
-        stage('Build') {
-            steps {
-                sh './gradlew clean build'
-            }
-        }
-
-        stage('Artifactory') {
-            steps {
-                rtUpload(
-                    serverId: "tema-final-01",
-                    spec: """{
-                        "files": [
-                        {
-                            "pattern": "build/libs/*.jar",
-                            "target": "tema-final-01/"
-                        }
-                        ]
-                    } """
-
-
-                    )
-            }
-        }
-
+    environment {
+        ARTIFACTORY_SERVER_ID = credentials('artifactory_server_id')
     }
+    stages {
+        stage('test') {
+            steps {
+                    sh ("./gradlew test")
+            }
+        }
+        stage('build') {
+            steps {
+                    sh ("./gradlew clean build")
+                }
+        }
+
+        stage('publish-artifactory') {
+            steps {
+                    rtUpload (
+                        serverId: env.ARTIFACTORY_SERVER_ID,
+                        spec: '''{
+                              "files": [
+                                {
+                                "pattern": "build/libs/calculator.jar",
+                                "target": "tema-01-final/"
+                                }
+                              ]
+                        }'''
+                   )
+            }
+        }
+    }
+
 }
