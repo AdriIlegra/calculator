@@ -3,34 +3,20 @@ pipeline {
 
     environment {
         ARTIFACTORY_SERVER_ID = credentials('artifactory_server_id')
-        ARTIFACTORU_HUB_CREDENTIALS = credentials('docker_hub_credentials')
     }
-   stages {
-       stage('Download jar') {
-         steps {
-               rtServer (
-               id: env.ARTIFACTORY_SERVER_ID,
 
-               )
-               rtDownload (
-               serverId: env.ARTIFACTORY_SERVER_ID,
-                           spec: '''{
-                                 "files": [
-                                   {
-                                       "pattern": "build/libs/calculator.jar",
-                                        "target": "tema-01-final/"
-                                   }
-                                 ]
-                           }'''
-               )
-         }
-       }
-   stage('Building a Docker image through Packer and pushing to Docker Hub') {
-          steps {
-              withCredentials([usernamePassword(credentialsId: 'docker_hub_credentials', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
-                  sh "packer build -var 'dockerhub_username=${env.DOCKERHUB_USERNAME}' -var 'dockerhub_password=${env.DOCKERHUB_PASSWORD}' packer.json"
-              }
+    stages {
+        stage('Build') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDENTIALS', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                    sh '''
+                        packer build \
+                            -var dockerhub_username=$DOCKERHUB_USERNAME \
+                            -var dockerhub_password=$DOCKERHUB_PASSWORD \
+                            Job-02/packer.json
+                    '''
+                }
             }
-          }
-      }
-  }
+        }
+    }
+}
