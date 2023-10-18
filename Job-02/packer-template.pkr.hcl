@@ -19,43 +19,33 @@ packer {
   }
 }
 
-source "docker" "ubuntu" {
-  image = "ubuntu:latest"
-  commit = true
-}
-
 build {
-  name = "tema-01-final"
-  sources = ["docker.ubuntu"]
+  name    = "job-2"
+  sources = [
+    "source.docker.ubuntu"
+  ]
 
   provisioner "shell" {
     inline = [
-      "docker login -u ${var.dockerhub_username} -p ${var.dockerhub_password}",
-      "docker build -t ${var.dockerhub_username}/calculator .",
-      "docker push ${var.dockerhub_username}/calculator"
+      "apt-get update",
+      "apt-get install ansible -y",
+      "ls -l ./build/libs"  # Adicione o comando ls aqui para listar o conteúdo do diretório
     ]
   }
 
-  provisioner "ansible-local" {
-    playbook_file = "playbook.yml"
-  }
-
   provisioner "file" {
-    source      = "target/calculator.jar"
-    destination = "/calculator.jar"
+    source      = ".build/libs/tema-06-0.0.1-SNAPSHOT.jar"
+    destination = "/tema-06-0.0.1-SNAPSHOT.jar"
   }
 
-  post-processor "docker-tag" {
-    repository = "your-docker-repo/calculator"
-    tag        = "latest"
+  provisioner "ansible-local" {
+    playbook_file = "./Job-2/playbook.yml"
+  }
+
+  post-processors {
+    post-processor "docker-tag" {
+      repository = "adriananogueira/tema_01_final"
+      tag        = "latest"
+    }
   }
 }
-
-
-
-
-
-
-
-
-
