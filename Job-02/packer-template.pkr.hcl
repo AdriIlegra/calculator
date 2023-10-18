@@ -1,9 +1,11 @@
-variables {
 
-  USERNAME   = "adriananogueira"
-  PASSWORD   = "123Mudar@"
+variable "dockerhub_username" {
+  type    = string
 }
 
+variable "dockerhub_password" {
+  type    = string
+}
 source "docker" "ubuntu" {
   image  = "ubuntu:18.04"
   commit = "true"
@@ -31,11 +33,11 @@ build {
     destination = "/calculator.jar"
   }
 
-    provisioner "shell" {
-        inline = [
-        "docker login -u ${var.USERNAME} -p ${var.PASSWORD}",
-        "docker build -t ${var.USERNAME}/calculator .",
-        "docker push ${var.USERNAME}/calculator"
-        ]
-    }
+  provisioner "shell" {
+    inline = [
+      "docker login -u ${var.dockerhub_username} -p ${var.dockerhub_password}",
+      "docker build -t ${var.dockerhub_username}/calculator .",
+      "docker push ${var.dockerhub_username}/calculator"
+    ]
+  }
 }
