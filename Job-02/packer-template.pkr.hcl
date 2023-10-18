@@ -22,17 +22,18 @@ source "docker" "ubuntu" {
   image = "ubuntu:18.04"
   commit = true
 }
-
 build {
+  name    = "my-docker-image"
   sources = ["docker.ubuntu"]
-}
+
   provisioner "shell" {
     inline = [
-      "apt-get update",
-      "apt-get install ansible -y",
-      "ls -l ./build/libs"  # Adicione o comando ls aqui para listar o conteúdo do diretório
+      "docker login -u ${var.dockerhub_username} -p ${var.dockerhub_password}",
+      "docker build -t ${var.dockerhub_username}/calculator .",
+      "docker push ${var.dockerhub_username}/calculator"
     ]
   }
+
 
   provisioner "file" {
     source      = ".build/libs/tema-06-0.0.1-SNAPSHOT.jar"
@@ -49,4 +50,5 @@ build {
       tag        = "latest"
     }
   }
+}
 
