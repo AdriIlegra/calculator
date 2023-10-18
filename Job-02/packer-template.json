@@ -1,0 +1,51 @@
+{
+  "variables": {
+    "docker_hub_username": "",
+    "docker_hub_password": ""
+  },
+  "builders":[
+    {
+      "type": "docker",
+      "image": "ubuntu:18.04",
+      "commit": true,
+      "changes": [
+        "EXPOSE 8085",
+        "ENTRYPOINT [\"java\", \"-jar\", \"calculator.jar\"]"
+      ]
+    }
+  ],
+  "provisioners":[
+    {
+      "type": "shell",
+      "inline": [
+        "apt-get -y update",
+        "apt-get -y install python3",
+        "apt-get -y install ansible"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "/var/lib/jenkins/workspace/job2/app/temafinal/calculator.jar",
+      "destination": "calculator.jar"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "./playbook.yml"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-tag",
+        "repository": "emizl/temafinal-01",
+        "tag": "tema-final01"
+      },
+      {
+        "type": "docker-push",
+        "login": "true",
+        "login_username": "{{user `docker_hub_username`}}",
+        "login_password": "{{user `docker_hub_password`}}"
+      }
+    ]
+  ]
+}

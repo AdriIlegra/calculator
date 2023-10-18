@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    environment {
+        ARTIFACTORY_SERVER_ID = credentials('artifactory_server_id')
+        ARTIFACTORU_HUB_CREDENTIALS = credentials('docker_hub_credentials')
+    }
+   stages {
+       stage('Download jar') {
+         steps {
+               rtServer (
+               id: env.ARTIFACTORY_SERVER_ID,
+
+               )
+               rtDownload (
+               serverId: env.ARTIFACTORY_SERVER_ID,
+                           spec: '''{
+                                 "files": [
+                                   {
+                                       "pattern": "build/libs/calculator.jar",
+                                        "target": "tema-01-final/"
+                                   }
+                                 ]
+                           }'''
+               )
+         }
+       }
+       stage('Push DockerHub'){
+        steps{
+          dir("Job-02"){
+            sh 'packer build -var "docker_hub_username=adriananogueira" -var "docker_hub_password=123Mudar@" packer-template.json'
