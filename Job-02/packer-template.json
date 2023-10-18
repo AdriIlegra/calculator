@@ -23,23 +23,14 @@
         "apt-get -y install ansible"
       ]
     },
-    {
-      "type": "file",
-      "source": "/var/lib/jenkins/workspace/job2/app/temafinal/calculator.jar",
-      "destination": "calculator.jar"
-    },
+
     {
       "type": "ansible-local",
       "playbook_file": "./playbook.yml"
     }
   ],
-  "post-processors": [
-    [
-      {
-        "type": "docker-tag",
-        "repository": "emizl/temafinal-01",
-        "tag": "tema-final01"
-      },
+    "post-processors": [
+
       {
         "type": "docker-push",
         "login": "true",
@@ -47,5 +38,5 @@
         "login_password": "{{user `docker_hub_password`}}"
       }
     ]
-  ]
+
 }
