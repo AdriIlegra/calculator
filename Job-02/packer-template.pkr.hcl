@@ -19,9 +19,15 @@ packer {
   }
 }
 
+source "docker" "ubuntu" {
+  type    = "docker-image"
+  image   = "ubuntu:18.04"
+  pull    = true
+}
+
 build {
   name = "my-docker-image"
-  sources = ["source.docker.ubuntu"]
+  sources = ["docker.ubuntu"]
 
   provisioner "shell" {
     script = "install-ansible.sh"
