@@ -1,25 +1,50 @@
-packer {
-  required_plugins {
-    docker = {
-      version = ">= 0.4.0"
-      source  = "github.com/hashicorp/docker"
-    }
-    ansible = {
-      version = ">= 0.0.0"
-      source  = "github.com/hashicorp/ansible"
-    }
-  }
+
+
+variable "USERNAME" {
+  description = "adriananogueira"
 }
 
-source "docker" "example" {
-  image = "ubuntu"
+variable "PASSWORD" {
+  description = "123Mudar@"
+}
+
+source "docker" "ubuntu" {
+  image  = "ubuntu:18.04"
+  commit = "true"
+  changes = [
+    "EXPOSE 8888",
+    "ENTRYPOINT  [\"java\", \"-jar\", \"calculator.jar\"]"
+  ]
 }
 
 build {
-  sources = ["source.docker.example"]
+  name = "calculator"
+
+  sources = ["source.docker.ubuntu"]
+
   provisioner "shell" {
-    inline = [
-      "echo 'Hello, world!'",
-    ]
+    script = "./job-02/install-ansible.sh"
+  }
+
+  provisioner "ansible-local" {
+    playbook_file = "./job-02/common.yml"
+  }
+
+  provisioner "file" {
+    source      = "Calculator-1.0-all.jar"
+    destination = "/calculator.jar"
+  }
+
+  post-processors {
+    post-processor "docker-tag" {
+      repository = var.REPOSITORY
+      tags       = ["latest"]
+    }
+
+    post-processor "docker-push" {
+      login          = true
+      login_username = var.USERNAME
+      login_password = var.PASSWORD
+    }
   }
 }
