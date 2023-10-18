@@ -1,7 +1,8 @@
-- name: Provisioning with ansible
+---
+- name: Provisioning with Ansible
   hosts: localhost
   tasks:
-    - name: install java 17
+    - name: Install Java 17
       apt:
         name: openjdk-17-jdk
         update_cache: yes

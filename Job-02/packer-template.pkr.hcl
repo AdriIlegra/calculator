@@ -5,6 +5,10 @@ variable "dockerhub_username" {
 variable "dockerhub_password" {
   type = string
 }
+variable "ansible_playbook_path" {
+  type    = string
+  default = "Job-02/playbook.yml" # Substitua com o caminho correto para o seu playbook
+}
 
 packer {
   required_plugins {
@@ -46,8 +50,7 @@ build {
 
 
   provisioner "ansible-local" {
-    playbook_file = "./Job-2/playbook.yml"
-  }
+    playbook_file = "${var.ansible_playbook_path}"
 
   post-processors {
     post-processor "docker-tag" {
