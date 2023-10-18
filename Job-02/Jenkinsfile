@@ -25,12 +25,12 @@ pipeline {
                )
          }
        }
-       stage('Push DockerHub'){
-        steps{
-          dir("Job-02"){
-            sh 'packer build -var "docker_hub_username=adriananogueira" -var "docker_hub_password=123Mudar@" packer-template.json'
+   stage('Building a Docker image through Packer and pushing to Docker Hub') {
+          steps {
+              withCredentials([usernamePassword(credentialsId: 'docker_hub_credentials', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                  sh "packer build --var dockerhub_username=$DOCKERHUB_USERNAME --var dockerhub_password=$DOCKERHUB_PASSWORD job-02/packer-template.json"
+              }
             }
-        }
-         }
-         }
-}
+          }
+      }
+  }
