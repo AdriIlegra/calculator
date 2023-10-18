@@ -20,7 +20,6 @@ packer {
 }
 
 source "docker" "ubuntu" {
-  type  = "docker-image"
   image = "ubuntu:18.04"
   pull  = true
 }
