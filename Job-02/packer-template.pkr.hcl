@@ -1,43 +1,25 @@
-{
-  "variables": {
-    "docker_hub_username": "",
-    "docker_hub_password": ""
-  },
-    "builders": [
-        {
-        "type": "docker",
-        "image": "ubuntu",
-        "commit": true,
-          "changes" : [
-        "EXPOSE 8888",
-        "ENTRYPOINT  [\"sh\", \"-c\", \"java ${JAVA_OPTS} -jar /var/lib/jetty/webapps/ROOT.jar\"]"
-      ]
+packer {
+  required_plugins {
+    docker = {
+      version = ">= 0.4.0"
+      source  = "github.com/hashicorp/docker"
     }
-    ],
+    ansible = {
+      version = ">= 0.0.0"
+      source  = "github.com/hashicorp/ansible"
+    }
+  }
+}
 
-    "build": [
-        {
-            "name": "calculator",
-            "source": "calculator.jar"
+source "docker" "example" {
+  image = "ubuntu"
+}
 
-        },
-        {
-            "type": "shell",
-            "script": ["./job-02/install-ansible.sh"
-            ]
-        },
-        {
-            "type": "ansible-local",
-            "playbook_file": "./job-02/playbook.yml"
-        }
-    ],
-
-    "provisioners": [
-            {
-                "type": "shell",
-                "inline": [
-                    "echo 'Hello World'"
-                ]
-            }
-        ]
+build {
+  sources = ["source.docker.example"]
+  provisioner "shell" {
+    inline = [
+      "echo 'Hello, world!'",
+    ]
+  }
 }
