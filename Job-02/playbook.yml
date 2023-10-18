@@ -1,8 +1,8 @@
 - name: Provisioning with ansible
   hosts: localhost
   tasks:
-    - name: install java 8
+    - name: install java 17
       apt:
-        name: openjdk-8-jdk
+        name: openjdk-17-jdk
         update_cache: yes
         install_recommends: no
