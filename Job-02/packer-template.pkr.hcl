@@ -46,7 +46,7 @@ build {
 
 
   provisioner "ansible-local" {
-    playbook_file = ".Job-2/playbook.yml"
+    playbook_file = "./Job-2/playbook.yml"
   }
 
   post-processors {
