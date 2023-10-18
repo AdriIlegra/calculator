@@ -1,22 +1,48 @@
 pipeline {
     agent any
 
+    environment {
+        ARTIFACTORY_SERVER_ID = credentials('artifactory_server_id')
+        ARTIFACTORY_SERVER_URL = credentials('artifactory_server_url')
+        ARTIFACTORY_CREDENTIALS = credentials('artifactory_credentials')
+    }
     stages {
-        stage('Upload para o Artifactory') {
+        stage('test') {
             steps {
-                script {
-                    def server = Artifactory.server 'artifactory-server'
-                    def uploadSpec = """{
-                        "files": [
-                            {
-                                "pattern": "**/target/*.war",
-                                "target": "releases/${APP_REPO}/${version.trim()}/"
-                            }
-                        ]
-                    }"""
-                    server.upload(uploadSpec)
+                    sh ("./gradlew test")
+            }
+        }
+        stage('build') {
+            steps {
+                    sh ("./gradlew clean build")
                 }
+        }
+        stage('fatJar') {
+            steps {
+                sh ("./gradlew fatJar")
+            }
+        }
+        stage('publish-artifactory') {
+            steps {
+                    rtServer (
+                        id: env.ARTIFACTORY_SERVER_ID,
+                        url: env.ARTIFACTORY_SERVER_URL,
+                        username: env.ARTIFACTORY_CREDENTIALS_USR,
+                        password: env.ARTIFACTORY_CREDENTIALS_PSW
+                    )
+                    rtUpload (
+                        serverId: env.ARTIFACTORY_SERVER_ID,
+                        spec: '''{
+                              "files": [
+                                {
+                                "pattern": "build/libs/calculator.jar",
+                                "target": "tema-01-final/"
+                                }
+                              ]
+                        }'''
+                   )
             }
         }
     }
+
 }
