@@ -1,9 +1,7 @@
-variable "USERNAME" {
-  description = "adriananogueira"
-}
+variables {
 
-variable "PASSWORD" {
-  description = "123Mudar@"
+  USERNAME   = ""
+  PASSWORD   = ""
 }
 
 source "docker" "ubuntu" {
