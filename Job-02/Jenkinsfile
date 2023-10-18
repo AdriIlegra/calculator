@@ -13,7 +13,7 @@ pipeline {
                         packer build \
                             -var dockerhub_username=$DOCKERHUB_USERNAME \
                             -var dockerhub_password=$DOCKERHUB_PASSWORD \
-                            Job-02/packer.json
+                            Job-02/packer-template.json
                     '''
                 }
             }
