@@ -19,11 +19,6 @@ packer {
   }
 }
 
-source "docker" "ubuntu" {
-  image = "ubuntu:18.04"
-  pull  = true
-}
-
 build {
   name    = "my-docker-image"
   sources = ["docker.ubuntu"]
