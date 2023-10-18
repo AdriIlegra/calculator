@@ -1,11 +1,11 @@
 
 
 variable "USERNAME" {
-  description = "adriananogueira"
+  description = ""
 }
 
 variable "PASSWORD" {
-  description = "123Mudar@"
+  description = "@"
 }
 
 source "docker" "ubuntu" {
