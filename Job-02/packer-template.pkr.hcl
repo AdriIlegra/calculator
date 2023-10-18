@@ -19,10 +19,6 @@ packer {
   }
 }
 
-source "docker" "ubuntu" {
-  image = "ubuntu:latest"
-}
-
 build {
   name    = "tema-01-final"
   sources = ["docker.ubuntu"]
@@ -35,36 +31,20 @@ build {
     ]
   }
 
+  provisioner "ansible" {
+    playbook_file = "Job-2/playbook.yml"
+  }
 
-  provisioner "ansible-local" {
-    playbook_file = "/Job-2/playbook.yml"
+  provisioner "file" {
+    source      = "calculator.jar"
+    destination = "/calculator.jar"
+  }
 
-
-
-    provisioner "file" {
-      source      = "calculator.jar"
-      destination = "/calculator.jar"
-    }
+  post-processor "docker-tag" {
+    repository = "${var.dockerhub_username}/calculator"
+    tag        = "latest"
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
