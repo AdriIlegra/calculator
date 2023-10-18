@@ -18,13 +18,14 @@ packer {
     }
   }
 }
+source "docker" "ubuntu" {
+  image = "ubuntu:18.04"
+  commit = true
+}
 
 build {
-  name    = "job-2"
-  sources = [
-    "source.docker.ubuntu"
-  ]
-
+  sources = ["docker.ubuntu"]
+}
   provisioner "shell" {
     inline = [
       "apt-get update",
