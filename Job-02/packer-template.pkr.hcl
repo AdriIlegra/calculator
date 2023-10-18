@@ -6,30 +6,33 @@ variable "dockerhub_username" {
 variable "dockerhub_password" {
   type    = string
 }
+packer {
+  required_plugins {
+    docker = {
+      source  = "github.com/hashicorp/docker"
+      version = ">= 1.0.0"
+    }
+  }
+}
+
 source "docker" "ubuntu" {
-  image  = "ubuntu:18.04"
-  commit = "true"
-  changes = [
-    "EXPOSE 8888",
-    "ENTRYPOINT  [\"java\", \"-jar\", \"calculator.jar\"]"
-  ]
+  image = "ubuntu:18.04"
 }
 
 build {
-  name = "calculator"
-
+  name = "my-docker-image"
   sources = ["source.docker.ubuntu"]
 
   provisioner "shell" {
-    script = "./job-02/install-ansible.sh"
+    script = "install-ansible.sh"
   }
 
   provisioner "ansible-local" {
-    playbook_file = "./job-02/common.yml"
+    playbook_file = "common.yml"
   }
 
   provisioner "file" {
-    source      = "Calculator-1.0-all.jar"
+    source      = "calculator.jar"
     destination = "/calculator.jar"
   }
 
