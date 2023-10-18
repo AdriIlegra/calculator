@@ -1,54 +1,41 @@
-variable "dockerhub_username" {
-  type = string
-}
-
-variable "dockerhub_password" {
-  type = string
-}
-
 packer {
   required_plugins {
     docker = {
+      version = ">= 1.0.1"
       source  = "github.com/hashicorp/docker"
-      version = ">= 1.0.0"
-    }
-    ansible = {
-      source  = "github.com/hashicorp/ansible"
-      version = "~> 1"
     }
   }
 }
+
 source "docker" "ubuntu" {
-  image = "ubuntu:18.04"
+  image  = "ubuntu:20.04"
   commit = true
+  changes = [
+    "EXPOSE 8085",
+    "ENTRYPOINT [\"java\", \"-jar\", \"/Tema-final-1-0.0.1-SNAPSHOT.jar\"]"
+  ]
 }
+
 build {
-  name    = "my-docker-image"
-  sources = ["docker.ubuntu"]
+  name = "job-2"
+  sources = ["source.docker.ubuntu"]
 
   provisioner "shell" {
     inline = [
-      "docker login -u ${var.dockerhub_username} -p ${var.dockerhub_password}",
-      "docker build -t ${var.dockerhub_username}/calculator .",
-      "docker push ${var.dockerhub_username}/calculator"
+      "apt-get update",
+      "apt-get install -y ansible"
     ]
   }
 
 
-  provisioner "file" {
-    source      = ".build/libs/tema-06-0.0.1-SNAPSHOT.jar"
-    destination = "/tema-06-0.0.1-SNAPSHOT.jar"
-  }
-
   provisioner "ansible-local" {
-    playbook_file = "./Job-2/playbook.yml"
+    playbook_file = "./job-2/playbook.yml"
   }
 
   post-processors {
     post-processor "docker-tag" {
-      repository = "adriananogueira/tema_01_final"
-      tag        = "latest"
+      repository = "brunnadocker/tema-final-1"
+      tags       = ["0.1"]
     }
   }
 }
-
