@@ -28,7 +28,7 @@ pipeline {
    stage('Building a Docker image through Packer and pushing to Docker Hub') {
           steps {
               withCredentials([usernamePassword(credentialsId: 'docker_hub_credentials', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
-packer build --var dockerhub_username=adriananogueira --var dockerhub_password=123Mudar@ Job-02/packer-template.json
+                  sh "packer build -var 'dockerhub_username=${env.DOCKERHUB_USERNAME}' -var 'dockerhub_password=${env.DOCKERHUB_PASSWORD}' packer.json"
               }
             }
           }
