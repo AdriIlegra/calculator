@@ -31,11 +31,11 @@ build {
     destination = "/calculator.jar"
   }
 
-
-    post-processor "docker-push" {
-      login          = true
-      username = var.dockerhub_username
-      password = var.dockerhub_password
+    provisioner "shell" {
+        inline = [
+        "docker login -u ${var.USERNAME} -p ${var.PASSWORD}",
+        "docker build -t ${var.USERNAME}/calculator .",
+        "docker push ${var.USERNAME}/calculator"
+        ]
     }
-  }
-
+}
