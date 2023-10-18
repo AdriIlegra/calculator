@@ -30,12 +30,8 @@ build {
   name    = "my-docker-image"
   sources = ["docker.ubuntu"]
 
-  provisioner "shell" {
-    script = "install-ansible.sh"
-  }
-
-  provisioner "ansible-local" {
-    playbook_file = "common.yml"
+  provisioner "ansible" {
+    script = "/Job-02/playbook.yml"
   }
 
   provisioner "file" {
