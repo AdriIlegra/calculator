@@ -1,11 +1,9 @@
-
-
 variable "USERNAME" {
-  description = ""
+  description = "adriananogueira"
 }
 
 variable "PASSWORD" {
-  description = "@"
+  description = "123Mudar@"
 }
 
 source "docker" "ubuntu" {
@@ -35,11 +33,6 @@ build {
     destination = "/calculator.jar"
   }
 
-  post-processors {
-    post-processor "docker-tag" {
-      repository = var.REPOSITORY
-      tags       = ["latest"]
-    }
 
     post-processor "docker-push" {
       login          = true
@@ -47,4 +40,4 @@ build {
       login_password = var.PASSWORD
     }
   }
-}
+
