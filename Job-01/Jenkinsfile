@@ -17,11 +17,7 @@ pipeline {
                     sh ("./gradlew clean build")
                 }
         }
-        stage('fatJar') {
-            steps {
-                sh ("./gradlew fatJar")
-            }
-        }
+
         stage('publish-artifactory') {
             steps {
                     rtServer (
