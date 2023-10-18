@@ -1,15 +1,10 @@
-variable "dockerhub_username" {
-  type = string
-}
+# packer-template.pkr.hcl
 
-variable "dockerhub_password" {
-  type = string
+variables {
+  dockerhub_username    = ""
+  dockerhub_password    = ""
+  ansible_playbook_path = "./Job-02/playbook.yml"
 }
-variable "ansible_playbook_path" {
-  type    = string
-  default = "Job-02/playbook.yml" # Substitua com o caminho correto para o seu playbook
-}
-
 packer {
   required_plugins {
     docker = {
@@ -20,44 +15,25 @@ packer {
 }
 
 source "docker" "ubuntu" {
-  image  = "ubuntu:20.04"
-  commit = true
+  image   = "ubuntu:20.04"
+  commit  = true
   changes = [
     "EXPOSE 8085",
-    "ENTRYPOINT [\"java\", \"-jar\", \"/tema06-0.0.1-SNAPSHOT.jar\"]"
+    "ENTRYPOINT [\"java\", \"-jar\", \"/Tema-final-1-0.0.1-SNAPSHOT.jar\"]"
   ]
 }
 
 build {
-  name    = "Job-02"
+  name    = "job-2"
   sources = ["source.docker.ubuntu"]
 
-
   provisioner "shell" {
     inline = [
-      "docker login -u ${var.dockerhub_username} -p ${var.dockerhub_password}",
-      "docker build -t ${var.dockerhub_username}/calculator .",
-      "docker push ${var.dockerhub_username}/calculator"
+      "sudo apt-get update",
+      "sudo pt-get install -y ansible"
     ]
   }
-
-  provisioner "shell" {
-    inline = [
-      "apt-get update",
-      "apt-get install -y ansible"
-    ]
-  }
-
-
   provisioner "ansible-local" {
-    playbook_file = "${var.ansible_playbook_path}"
-
-    }
-
-    post-processors {
-      post-processor "docker-tag" {
-        repository = "adriananogueira/tema-final-01"
-        tags       = ["0.1"]
-      }
-    }
+    playbook_file = "${var.ansible_playbook_path}"  # Especifique o caminho do playbook Ansible
   }
+}

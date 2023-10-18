@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+            DOCKERHUB_CREDENTIAL = credentials('dockerhub_credential')
         ARTIFACTORY_SERVER_ID = credentials('artifactory_server_id')
     }
 
@@ -14,10 +15,13 @@ pipeline {
 
         stage('Build') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker_hub_credentials', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
-                    sh '''
-                       packer build -var 'dockerhub_username=adriananogueira' -var 'dockerhub_password=123Mudar@' ./Job-02/packer-template.pkr.hcl
-                    '''
+                 script {
+                                    DOCKERHUB_USERNAME = DOCKERHUB_CREDENTIAL_USUARIO
+                                    DOCKERHUB_PASSWORD = DOCKERHUB_CREDENTIAL_SENHA
+
+                                    sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
+
+                                    sh 'packer build -var "artifactory_server_id=${ARTIFACTORY_SERVER_ID}" ./Job-02/packer-template.pkr.hcl'
                 }
             }
         }
