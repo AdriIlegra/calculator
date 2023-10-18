@@ -18,13 +18,14 @@ packer {
     }
   }
 }
-
 source "docker" "ubuntu" {
-  type = "docker-image"
-  image = "ubuntu:18.04"
-  pull  = true
+  image  = "ubuntu:18.04"
+  commit = "true"
+  changes = [
+    "EXPOSE 8888",
+    "ENTRYPOINT  [\"java\", \"-jar\", \"calculator.jar\"]"
+  ]
 }
-
 build {
   name    = "my-docker-image"
   sources = ["docker.ubuntu"]
