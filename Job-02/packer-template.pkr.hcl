@@ -18,10 +18,15 @@ packer {
     }
   }
 }
+source "docker" "ubuntu" {
+  commit = true
+  image  = "${var.image}"
+}
 
 build {
-  name    = "tema-01-final"
-  sources = ["docker.ubuntu"]
+  sources = ["source.docker.ubuntu"]
+
+}
 
   provisioner "shell" {
     inline = [
@@ -44,8 +49,6 @@ build {
     repository = "${var.dockerhub_username}/calculator"
     tag        = "latest"
   }
-}
-
 
 
 
