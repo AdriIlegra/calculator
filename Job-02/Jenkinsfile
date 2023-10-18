@@ -29,3 +29,8 @@ pipeline {
         steps{
           dir("Job-02"){
             sh 'packer build -var "docker_hub_username=adriananogueira" -var "docker_hub_password=123Mudar@" packer-template.json'
+            }
+        }
+         }
+         }
+}
