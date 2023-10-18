@@ -10,24 +10,34 @@
         "commit": true,
           "changes" : [
         "EXPOSE 8888",
-        "ENTRYPOINT  [\"java\", \"-jar\", \"calculator.jar\"]"
+        "ENTRYPOINT  [\"sh\", \"-c\", \"java ${JAVA_OPTS} -jar /var/lib/jetty/webapps/ROOT.jar\"]"
       ]
     }
     ],
 
-    "provisioners": [
+    "build": [
         {
-            "type": "file",
-            "source": "calculator.jar",
-            "destination": "/home/ubuntu/calculator.jar"
+            "name": "calculator",
+            "source": "calculator.jar"
+
         },
         {
             "type": "shell",
-            "inline": [
-                "docker login -u \"{{user `docker_hub_username`}}\" -p \"{{user `docker_hub_password`}}\"",
-                "docker tag ubuntu {{user `docker_hub_username`}}/ubuntu",
-                "docker push {{user `docker_hub_username`}}/ubuntu"
+            "script": ["./job-02/install-ansible.sh"
             ]
+        },
+        {
+            "type": "ansible-local",
+            "playbook_file": "./job-02/playbook.yml"
         }
-    ]
+    ],
+
+    "provisioners": [
+            {
+                "type": "shell",
+                "inline": [
+                    "echo 'Hello World'"
+                ]
+            }
+        ]
 }
