@@ -16,25 +16,15 @@ pipeline {
                 }
         }
 
-        stage('publish-artifactory') {
+        stage('publish') {
             steps {
-                    rtServer (
-                        id: env.ARTIFACTORY_SERVER_ID,
-
-                    )
-                    rtUpload (
-                        serverId: env.ARTIFACTORY_SERVER_ID,
-                        spec: '''{
-                              "files": [
-                                {
-                                "pattern": "build/libs/calculator.jar",
-                                "target": "tema-01-final/"
-                                }
-                              ]
-                        }'''
-                   )
+                script {
+                    def server = Artifactory.server ARTIFACTORY_SERVER_ID
+                    def rtGradle = Artifactory.newGradleBuild()
+                    rtGradle.tool = 'gradle'
+                    rtGradle.run rootDir: './'
+                }
             }
         }
     }
-
 }
