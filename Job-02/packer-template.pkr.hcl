@@ -52,6 +52,8 @@ build {
   provisioner "ansible-local" {
     playbook_file = "${var.ansible_playbook_path}"
 
+    }
+
     post-processors {
       post-processor "docker-tag" {
         repository = "adriananogueira/tema-final-01"
@@ -59,4 +61,3 @@ build {
       }
     }
   }
-}
