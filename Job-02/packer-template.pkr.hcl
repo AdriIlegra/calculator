@@ -1,9 +1,9 @@
 variable "dockerhub_username" {
-  type    = string
+  type = string
 }
 
 variable "dockerhub_password" {
-  type    = string
+  type = string
 }
 
 packer {
@@ -20,13 +20,13 @@ packer {
 }
 
 source "docker" "ubuntu" {
-  type    = "docker-image"
-  image   = "ubuntu:18.04"
-  pull    = true
+  type = "docker-image"
+  image = "ubuntu:18.04"
+  pull  = true
 }
 
 build {
-  name = "my-docker-image"
+  name    = "my-docker-image"
   sources = ["docker.ubuntu"]
 
   provisioner "shell" {
@@ -49,9 +49,9 @@ build {
       "docker push ${var.dockerhub_username}/calculator"
     ]
   }
+}
 
-  post-processor "docker-tag" {
-    repository = "your-docker-repo/calculator"
-    tag        = "latest"
-  }
+post-processor "docker-tag" {
+  repository = "your-docker-repo/calculator"
+  tag        = "latest"
 }
