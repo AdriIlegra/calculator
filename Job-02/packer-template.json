@@ -3,40 +3,31 @@
     "docker_hub_username": "",
     "docker_hub_password": ""
   },
-  "builders":[
-    {
-      "type": "docker",
-      "image": "ubuntu:18.04",
-      "commit": true,
-      "changes": [
-        "EXPOSE 8085",
-        "ENTRYPOINT [\"java\", \"-jar\", \"calculator.jar\"]"
+    "builders": [
+        {
+        "type": "docker",
+        "image": "ubuntu",
+        "commit": true,
+          "changes" : [
+        "EXPOSE 8888",
+        "ENTRYPOINT  [\"java\", \"-jar\", \"calculator.jar\"]"
       ]
     }
-  ],
-  "provisioners":[
-    {
-      "type": "shell",
-      "inline": [
-        "apt-get -y update",
-        "apt-get -y install python3",
-        "apt-get -y install ansible"
-      ]
-    },
+    ],
 
-    {
-      "type": "ansible-local",
-      "playbook_file": "./playbook.yml"
-    }
-  ],
-    "post-processors": [
-
-      {
-        "type": "docker-push",
-        "login": "true",
-        "login_username": "{{user `docker_hub_username`}}",
-        "login_password": "{{user `docker_hub_password`}}"
-      }
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "calculator.jar",
+            "destination": "/home/ubuntu/calculator.jar"
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "docker login -u \"{{user `docker_hub_username`}}\" -p \"{{user `docker_hub_password`}}\"",
+                "docker tag ubuntu {{user `docker_hub_username`}}/ubuntu",
+                "docker push {{user `docker_hub_username`}}/ubuntu"
+            ]
+        }
     ]
-
 }
