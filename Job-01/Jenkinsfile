@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         ARTIFACTORY_SERVER_ID = credentials('artifactory_server_id')
+        ARTIFACTORY_SERVER_URL = credentials('artifactory_server_url')
         ARTIFACTORY_CREDENTIALS = credentials('artifactory_credentials1')
     }
     stages {
@@ -22,6 +23,7 @@ pipeline {
                     rtServer (
                         id: env.ARTIFACTORY_SERVER_ID,
                         credentialsId: env.ARTIFACTORY_CREDENTIALS
+                        url: env.ARTIFACTORY_SERVER_URL
 
                     )
                     rtUpload (
