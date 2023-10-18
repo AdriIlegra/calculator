@@ -1,7 +1,7 @@
 variables {
 
-  USERNAME   = ""
-  PASSWORD   = ""
+  USERNAME   = "adriananogueira"
+  PASSWORD   = "123Mudar@"
 }
 
 source "docker" "ubuntu" {
@@ -34,8 +34,8 @@ build {
 
     post-processor "docker-push" {
       login          = true
-      login_username = var.USERNAME
-      login_password = var.PASSWORD
+      username = var.dockerhub_username
+      password = var.dockerhub_password
     }
   }
 
