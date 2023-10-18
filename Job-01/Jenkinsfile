@@ -23,6 +23,7 @@ pipeline {
                     rtServer (
                         id: env.ARTIFACTORY_SERVER_ID,
                         url: env.ARTIFACTORY_SERVER_URL,
+                        credentialsId: env.ARTIFACTORY_CREDENTIALS
 
                     )
                     rtUpload (
