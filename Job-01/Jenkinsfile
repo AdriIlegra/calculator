@@ -25,13 +25,19 @@ pipeline {
             }
         }
 
-        stage('Upload artifact to Artifactory') {
-            environment {
-                JFROG_PASSWORD = credentials('token_jfrog')
-            }
-
+        stage('Publish Artifacts') {
             steps {
-                sh 'curl -u admin:$JFROG_PASSWORD XPUT http://localhost:8082/artifactory/tema-final-01/calculator-0.0.1-SNAPSHOT.jar -T build/libs/tema-06-0.0.1-SNAPSHOT.jar'
+                rtUpload (
+                    serverId: "${env.ARTIFACTORY_SERVER_ID}",
+                    spec: '''{
+                        "files": [
+                            {
+                                "pattern": "build/libs/tema-06-0.0.1-SNAPSHOT.jar",
+                                "target": "tema-final-01/"
+                            }
+                        ]
+                    }'''
+                )
             }
         }
     }
