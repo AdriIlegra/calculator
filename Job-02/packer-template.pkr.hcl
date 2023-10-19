@@ -1,7 +1,7 @@
 # packer-template.pkr.hcl
 variables {
-  dockerhub_username    = ""
-  dockerhub_password    = ""
+  dockerhub_username    = "adriananogueira"
+  dockerhub_password    = "123Mudar@"
   ansible_playbook_path = "./Job-02/playbook.yml"
   dockerhub_credentials = "docker_hub_credentials" # Substitua pelo valor correto
 }

@@ -1,24 +1,10 @@
 pipeline {
     agent any
-
-    environment {
-        DOCKERHUB_CREDENTIALS = 'docker_hub_credentials'
-    }
-
     stages {
         stage('Build') {
             steps {
-                sh 'packer build -var dockerhub_username=$DOCKERHUB_USERNAME -var dockerhub_password=$DOCKERHUB_PASSWORD -var-file=./Job-02/packer-template.pkr.hcl'
-            }
-        }
-
-        stage('Push') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS, usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
-                        sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
-                        sh 'docker push tema-01-final'
-                    }
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
+                    sh 'packer build -var "dockerhub_username=${DOCKERHUB_USERNAME}" -var "dockerhub_password=${DOCKERHUB_PASSWORD}" -var-file=./Job-02/packer-template.pkr.hcl'
                 }
             }
         }
