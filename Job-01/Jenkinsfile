@@ -27,21 +27,22 @@ pipeline {
         sh './gradlew clean build'
       }
     }
-    stage('Upload artifact to Artifactory') {
-      environment {
-        JFROG_PASSWORD = credentials('token_jfrog')
-      }
+  stage('Upload artifact to Artifactory') {
       steps {
-        sh 'ls -l'
-        script {
-          def jarFile = "${env.WORKSPACE}/build/libs/tema-06-0.0.1-SNAPSHOT.jar"
-          if (fileExists(jarFile)) {
-            sh "sudo curl -u admin:$JFROG_PASSWORD -XPUT http://artifactory:8082/artifactory/tema-final-01/tema-06-0.0.1-SNAPSHOT.jar -T $jarFile"
-          } else {
-            error "Arquivo não encontrado: $jarFile"
+          script {
+              def jenkinsWorkspace = pwd()  // Obtém o caminho atual do workspace do Jenkins
+              def arquivoJAR = "${jenkinsWorkspace}/build/libs/tema-06-0.0.1-SNAPSHOT.jar"
+              // Verifica se o arquivo JAR existe no caminho especificado
+              if (fileExists(arquivoJAR)) {
+                  // Faz o upload do arquivo JAR para o Artifactory
+                  withCredentials([usernamePassword(credentialsId: 'artifactory-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                      sh "curl -u ${USERNAME}:${PASSWORD} -XPUT http://artifactory:8082/artifactory/tema-final-01/tema-06-0.0.1-SNAPSHOT.jar -T ${arquivoJAR}"
+                  }
+              } else {
+                  error "Arquivo JAR não encontrado: ${arquivoJAR}"
+              }
           }
-        }
       }
-    }
+  }
   }
 }
