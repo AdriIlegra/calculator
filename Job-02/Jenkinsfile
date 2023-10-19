@@ -16,11 +16,7 @@ pipeline {
         stage('Build') {
             steps {
                  script {
-                                    DOCKERHUB_USERNAME = DOCKERHUB_CREDENTIAL_USUARIO
-                                    DOCKERHUB_PASSWORD = DOCKERHUB_CREDENTIAL_SENHA
-
-                                    sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
-
+                    sh 'packer build -var "dockerhub_credentials=${DOCKERHUB_CREDENTIAL}" ./Job-02/packer-template.pkr.hcl'
                                     sh 'packer build -var "artifactory_server_id=${ARTIFACTORY_SERVER_ID}" ./Job-02/packer-template.pkr.hcl'
                 }
             }
