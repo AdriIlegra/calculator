@@ -23,7 +23,8 @@ pipeline {
                         spec: '''{
                               "files": [
                                 {
-
+                                "pattern": "build/libs/calculator.jar",
+                                "target": "tema-01-final/"
                                 }
                               ]
                         }'''
