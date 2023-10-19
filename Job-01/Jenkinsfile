@@ -29,19 +29,10 @@ pipeline {
     }
     stage('Upload artifact to Artifactory') {
       steps {
-        rtUpload (
-            serverId: "${env.ARTIFACTORY_SERVER_ID}",
-            spec: '''{
-              "files": [
-                {
-                  "pattern": "build/libs/tema-06-0.0.1-SNAPSHOT.war",
-                  "target": "tema-final-01/"
-                }
-              ]
-            }'''
-        )
+        withCredentials([usernamePassword(credentialsId: 'token_jfrog', usernameVariable: 'JFROG_USERNAME', passwordVariable: 'JFROG_PASSWORD')]) {
+          sh "curl -u $JFROG_USERNAME:$JFROG_PASSWORD -XPUT http://artifactory:8082/artifactory/tema-final-01/tema-06-0.0.1-SNAPSHOT.war -T build/libs/tema-06-0.0.1-SNAPSHOT.war"
         }
-        }
+      }
     }
+  }
 }
-
