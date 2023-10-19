@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-            DOCKERHUB_CREDENTIAL = credentials('dockerhub_credential')
+            DOCKERHUB_CREDENTIAL = credentials('docker_hub_credentials')
         ARTIFACTORY_SERVER_ID = credentials('artifactory_server_id')
     }
 

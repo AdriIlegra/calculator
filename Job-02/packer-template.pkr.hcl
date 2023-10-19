@@ -1,10 +1,10 @@
 # packer-template.pkr.hcl
-
 variables {
   dockerhub_username    = ""
   dockerhub_password    = ""
   ansible_playbook_path = "./Job-02/playbook.yml"
 }
+
 packer {
   required_plugins {
     docker = {
@@ -30,10 +30,11 @@ build {
   provisioner "shell" {
     inline = [
       "sudo apt-get update",
-      "sudo pt-get install -y ansible"
+      "sudo apt-get install -y ansible"
     ]
   }
+
   provisioner "ansible-local" {
-    playbook_file = "${var.ansible_playbook_path}"  # Especifique o caminho do playbook Ansible
+    playbook_file = "${var.ansible_playbook_path}"
   }
 }
