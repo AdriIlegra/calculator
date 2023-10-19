@@ -2,22 +2,23 @@ pipeline {
     agent any
 
     environment {
-            DOCKERHUB_CREDENTIAL = credentials('docker_hub_credentials')
-        ARTIFACTORY_SERVER_ID = credentials('artifactory_server_id')
+        DOCKERHUB_CREDENTIALS = 'docker_hub_credentials'
     }
 
     stages {
-        stage('Initialize Packer') {
+        stage('Build') {
             steps {
-                sh 'packer init ./Job-02/packer-template.pkr.hcl'
+                sh 'packer build -var dockerhub_username=$DOCKERHUB_USERNAME -var dockerhub_password=$DOCKERHUB_PASSWORD -var-file=packer-variables.json ./Job-02/packer-template.pkr.hcl'
             }
         }
 
-        stage('Build') {
+        stage('Push') {
             steps {
-                 script {
-                     sh "packer build -var 'dockerhub_credentials=${DOCKERHUB_CREDENTIAL}' ./Job-02/packer-template.pkr.hcl"
-
+                script {
+                    withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS, usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                        sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
+                        sh 'docker push tema-01-final'
+                    }
                 }
             }
         }
