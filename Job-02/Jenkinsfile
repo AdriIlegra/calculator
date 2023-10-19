@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKERHUB_USERNAME = credentials('docker_hub_username')
-        DOCKERHUB_PASSWORD = credentials('docker_hub_password')
-    }
-
     stages {
         stage('Initialize Packer') {
             steps {
@@ -15,7 +10,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                script {
+                withCredentials([usernamePassword(credentialsId: 'docker_hub_credentials', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
                     sh "packer build -var 'dockerhub_username=${DOCKERHUB_USERNAME}' -var 'dockerhub_password=${DOCKERHUB_PASSWORD}' ./Job-02/packer-template.pkr.hcl"
                 }
             }
