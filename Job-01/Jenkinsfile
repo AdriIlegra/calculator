@@ -29,12 +29,11 @@ pipeline {
     }
     stage('Upload artifact to Artifactory') {
               environment {
-                  JFROG_PASSWORD = credentials('token_jfrog')
+                withCredentials([string(credentialsId: 'token_jfrog', variable: 'JFROG_PASSWORD')]) {
+                  sh 'curl -u admin:$JFROG_PASSWORD -XPUT http://artifactory:8082/artifactory/tema-final-01/tema-06-0.0.1-SNAPSHOT.war -T build/libs/tema-06-0.0.1-SNAPSHOT.war'
+                }
               }
 
-              steps {
-                  sh 'curl -u admin:$JFROG_PASSWORD -XPUT http://artifactory:8082/artifactory/tema-final-01/tema-06-0.0.1-SNAPSHOT.war -T build/libs/tema-06-0.0.1-SNAPSHOT.war'
-              }
-          }
-      }
-  }
+            }
+   }
+}
