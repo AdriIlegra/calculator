@@ -28,8 +28,13 @@ environment {
             }
         }
         stage('Upload artifact to Artifactory') {
-         withCredentials([usernamePassword(credentialsId: 'artifactory-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                     sh "curl -u ${USERNAME}:${PASSWORD} -XPUT http://artifactory:8082/artifactory/tema-final-01/tema-06-0.0.1-SNAPSHOT.jar -T build/libs/tema-06-0.0.1-SNAPSHOT.jar"
+            environment {
+                JFROG_PASSWORD = credentials('token_jfrog')
+            }
+
+            steps {
+                sh 'ls -l'
+                sh 'curl -u admin:$JFROG_PASSWORD -XPUT http://localhost:8082/artifactory/tema-final-01/tema-06-0.0.1-SNAPSHOT.jar -T build/libs/tema-06-0.0.1-SNAPSHOT.jar'
             }
         }
     }
