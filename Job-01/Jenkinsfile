@@ -31,7 +31,7 @@ pipeline {
       steps {
           script {
               def jenkinsWorkspace = pwd()  // Obtém o caminho atual do workspace do Jenkins
-              def arquivoJAR = "/var/lib/jenkins/workspace/Job-01/build/libs/tema-06-0.0.1-SNAPSHOT.jar"
+              def arquivoJAR = "${jenkinsWorkspace}/build/libs/tema-06-0.0.1-SNAPSHOT.jar"
               // Verifica se o arquivo JAR existe no caminho especificado
               if (fileExists(arquivoJAR)) {
                   // Faz o upload do arquivo JAR para o Artifactory
@@ -44,6 +44,5 @@ pipeline {
           }
       }
   }
-
     }
 }
