@@ -1,43 +1,40 @@
 pipeline {
     agent any
-
-    environment {
+environment {
         CI = 'true'
-        ARTIFACTORY_SERVER_ID = 'tema-01-final' // Nome do servidor de Artifactory configurado no Jenkins
+        ARTIFACTORY_SERVER_ID = 'tema-final-01' // Nome do servidor de Artifactory configurado no Jenkins
     }
-
     stages {
         stage('Git Clone') {
             steps {
                 git branch: 'main', url: 'https://github.com/AdriIlegra/calculator.git'
             }
         }
-
         stage('Run Tests') {
             steps {
-                sh './gradlew test'
+                script {
+                    def gradlewFile = "${env.WORKSPACE}/gradlew"
+                    def command = "chmod +x ${gradlewFile}"
+
+                    sh label: 'Grant execute permission', script: command
+
+                    sh label: 'Run Tests', script: "${gradlewFile} test"
+                }
             }
         }
-
         stage('Build Jar') {
             steps {
                 sh './gradlew clean build'
             }
         }
+        stage('Upload artifact to Artifactory') {
+            environment {
+                JFROG_PASSWORD = credentials('token_jfrog')
+            }
 
-        stage('Publish Artifacts') {
             steps {
-                rtUpload (
-                    serverId: "${env.ARTIFACTORY_SERVER_ID}",
-                    spec: '''{
-                        "files": [
-                            {
-                                "pattern": "build/libs/tema-06-0.0.1-SNAPSHOT.jar",
-                                "target": "tema-final-01/"
-                            }
-                        ]
-                    }'''
-                )
+                sh 'ls -l'
+                sh 'curl -u admin:$JFROG_PASSWORD -XPUT http://artifactory:8082/artifactory/tema-final-01/tema-06-0.0.1-SNAPSHOT.jar -T build/libs/tema-06-0.0.1-SNAPSHOT.jar'
             }
         }
     }
