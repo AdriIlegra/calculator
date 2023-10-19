@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Pull Dockerhub') {
             steps {
-                sh 'docker pull adriananogueira/tema_01_final'
+                sh 'docker pull adriananogueira/tema_01_final:tagname'
             }
         }
         stage('Docker run') {
