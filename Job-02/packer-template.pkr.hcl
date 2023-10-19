@@ -3,6 +3,7 @@ variables {
   dockerhub_username    = ""
   dockerhub_password    = ""
   ansible_playbook_path = "./Job-02/playbook.yml"
+  dockerhub_credentials = "docker_hub_credentials" # Substitua pelo valor correto
 }
 
 packer {
