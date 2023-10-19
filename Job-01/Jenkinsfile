@@ -31,7 +31,7 @@ pipeline {
             }
 
             steps {
-                sh 'curl -u admin:$JFROG_PASSWORD -XPUT http://artifactory:8082/artifactory/tema-final-1/calculator-0.0.1-SNAPSHOT.jar -T build/libs/tema-06-0.0.1-SNAPSHOT.jar'
+                sh 'curl -u admin:$JFROG_PASSWORD XPUT http://localhost:8082/artifactory/tema-final-01/calculator-0.0.1-SNAPSHOT.jar -T build/libs/tema-06-0.0.1-SNAPSHOT.jar
             }
         }
     }
