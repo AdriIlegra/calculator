@@ -30,7 +30,8 @@ build {
 
   provisioner "shell" {
     inline = [
-      "sudo apt-get update",
+      "apt-get update",
+      "apt-get install -y sudo",  # Instala o sudo
       "sudo apt-get install -y ansible"
     ]
   }
