@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         CI = 'true'
-        ARTIFACTORY_SERVER_ID = 'tema-final-1' // Nome do servidor de Artifactory configurado no Jenkins
+        ARTIFACTORY_SERVER_ID = 'tema-01-final' // Nome do servidor de Artifactory configurado no Jenkins
     }
 
     stages {
