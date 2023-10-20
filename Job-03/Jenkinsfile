@@ -9,7 +9,7 @@ pipeline {
         }
         stage('Docker run') {
             steps {
-                sh 'docker run  -d -p 8085:8085 adriananogueira/tema_01_final'
+                sh 'docker run -d -p 8085:8085 adriananogueira/tema_01_final:latest'
             }
         }
     }
