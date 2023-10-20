@@ -6,6 +6,6 @@ WORKDIR /home/gradle/src
 RUN gradle clean build
 RUN ls /home/gradle/src/build/libs/
 FROM jetty:${JETTY_VERSION} as jetty
-COPY --from=gradle /home/gradle/src/build/libs/tema-06-0.0.1-SNAPSHOT.jar /var/lib/jetty/webapps/ROOT.jar
-EXPOSE 8082
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /var/lib/jetty/webapps/ROOT.jar"]
+COPY --from=gradle /home/gradle/src/build/libs/tema-06-0.0.1-SNAPSHOT.war /var/lib/jetty/webapps/ROOT.war
+EXPOSE 8087
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -war /var/lib/jetty/webapps/ROOT.war"]
